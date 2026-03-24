@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: vodtbank
+  # MySQL Database Configuration
+  datasource:
+    url: jdbc:mysql://localhost:3306/vodtbank
+    username: root
+    password: root
+  # JPA Configuration
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
