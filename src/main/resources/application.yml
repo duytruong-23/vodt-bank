@@ -1,14 +1,16 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
   application:
     name: vodtbank
-  # MySQL Database Configuration
-  datasource:
-    url: jdbc:mysql://localhost:3306/vodtbank
-    username: root
-    password: root
+  profiles:
+    active: mysql
   # JPA Configuration
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+server:
+  port: ${SERVER_PORT:8080}
 
