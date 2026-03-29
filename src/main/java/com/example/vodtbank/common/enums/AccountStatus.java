@@ -1,4 +1,4 @@
-package com.example.vodtbank.enums;
+package com.example.vodtbank.common.enums;
 
 public enum AccountStatus {
     ACTIVE,
