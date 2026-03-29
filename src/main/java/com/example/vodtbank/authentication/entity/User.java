@@ -1,13 +1,21 @@
 package com.example.vodtbank.authentication.entity;
 
+import java.util.List;
+
 import com.example.vodtbank.common.entity.BaseEntity;
 import com.example.vodtbank.role.entity.Role;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -43,4 +51,7 @@ public class User extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     @JsonManagedReference
     private List<Role> roles;
+
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private PasswordResetCode passwordResetCode;
 }
