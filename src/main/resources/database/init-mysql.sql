@@ -68,11 +68,15 @@ DROP TABLE IF EXISTS transactions;
 CREATE TABLE transactions
 (
     id               SERIAL PRIMARY KEY,
+    transaction_id      VARCHAR(50)    NOT NULL UNIQUE,
     account_id       BIGINT UNSIGNED NOT NULL,
-    amount           DECIMAL(15, 2)  NOT NULL,
+    amount              DECIMAL(19, 2) NOT NULL,
     transaction_type VARCHAR(50)     NOT NULL,
+    transaction_status  VARCHAR(20)    NOT NULL DEFAULT 'PENDING',
     description      TEXT,
     transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    source_account      VARCHAR(20),
+    destination_account VARCHAR(20),
     created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (account_id) REFERENCES accounts (id) ON DELETE CASCADE

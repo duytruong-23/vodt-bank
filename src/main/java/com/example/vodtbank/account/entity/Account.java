@@ -5,10 +5,13 @@ import com.example.vodtbank.common.entity.BaseEntity;
 import com.example.vodtbank.common.enums.AccountStatus;
 import com.example.vodtbank.common.enums.AccountType;
 import com.example.vodtbank.common.enums.Currency;
+import com.example.vodtbank.transaction.entity.Transaction;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "accounts")
@@ -37,5 +40,7 @@ public class Account extends BaseEntity {
     @JsonBackReference
     private User user;
 
-
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Transaction> transactions;
 }
