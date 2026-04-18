@@ -35,3 +35,7 @@ build/
 ### Environment ###
 .env
 .env.local
+
+### Jwt secret ###
+public.pem
+private.pem
