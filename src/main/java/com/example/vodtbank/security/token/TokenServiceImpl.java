@@ -42,7 +42,7 @@ public class TokenServiceImpl implements TokenService {
 	}
 
 	@Override
-	public String generateToken(String email) throws IOException {
+	public String generateToken(String email) {
 		return Jwts.builder()
 				.subject(email)
 				.issuedAt(new Date(System.currentTimeMillis()))
@@ -52,18 +52,18 @@ public class TokenServiceImpl implements TokenService {
 	}
 
 	@Override
-	public String getUsernameFromToken(String token) throws IOException {
+	public String getUsernameFromToken(String token) {
 		return extractClaims(token, Claims::getSubject);
 	}
 
 	@Override
-	public boolean validateToken(String token, UserDetails userDetails) throws IOException {
+	public boolean validateToken(String token, UserDetails userDetails) {
 		String username = getUsernameFromToken(token);
 		return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
 	}
 
 	@Override
-	public boolean isTokenExpired(String token) throws IOException {
+	public boolean isTokenExpired(String token) {
 		Date expiration = extractClaims(token, Claims::getExpiration);
 		if (expiration != null) {
 			return expiration.before(new Date());
@@ -102,7 +102,7 @@ public class TokenServiceImpl implements TokenService {
 		}
 	}
 
-	private <T> T extractClaims(String token, Function<Claims, T> claimsResolver) throws IOException {
+	private <T> T extractClaims(String token, Function<Claims, T> claimsResolver) {
 		Claims claims = Jwts.parser()
 				.verifyWith(publicKey)
 				.build()
