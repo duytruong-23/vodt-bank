@@ -1,6 +1,9 @@
 package com.example.vodtbank.config;
 
+import com.example.vodtbank.common.dto.BaseDto;
+import com.example.vodtbank.common.entity.BaseEntity;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +39,15 @@ public class AppConfig {
                 .setFieldMatchingEnabled(true)
                 .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE)
                 .setMatchingStrategy(MatchingStrategies.STANDARD);
+
+		modelMapper.addMappings(new PropertyMap<BaseDto, BaseEntity>() {
+			@Override
+			protected void configure() {
+				skip(destination.getId());
+				skip(destination.getCreatedAt());
+				skip(destination.getUpdatedAt());
+			}
+		});
 
         return modelMapper;
     }
