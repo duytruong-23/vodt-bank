@@ -43,7 +43,7 @@ public class AuthFilter extends OncePerRequestFilter {
 			try {
 				email = tokenService.getUsernameFromToken(token);
 			} catch(Exception e) {
-				logger.error("Tokken processing error");
+				logger.error("Token processing error");
 				AuthenticationException authenticationException = new BadCredentialsException(e.getMessage());
 				authenticationEntryPoint.commence(request, response, authenticationException);
 				return;

@@ -34,3 +34,9 @@ jwt:
   public-path: ${JWT_PUBLIC_KEY_LOCATION:classpath:jwt/public.pem}
   private-path: ${JWT_PRIVATE_KEY_LOCATION:classpath:jwt/private.pem}
   expiration: ${JWT_EXPIRATION:3600000} # milliseconds
+
+### Logging Configuration ###
+logging:
+  level:
+    org.springframework.security: TRACE
+    com.vodtbank: TRACE

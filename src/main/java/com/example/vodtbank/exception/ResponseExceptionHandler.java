@@ -11,7 +11,7 @@ public class ResponseExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Response<?>> handleUnknownException(Exception ex) {
-		Response<?> response = new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(), null);
+		Response<?> response = new Response<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error", null);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 	}
 

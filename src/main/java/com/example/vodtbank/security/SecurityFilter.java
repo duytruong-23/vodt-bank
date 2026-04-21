@@ -41,7 +41,7 @@ public class SecurityFilter {
 				.exceptionHandling(ex -> ex.accessDeniedHandler(accessDeniedHandler)
 						.authenticationEntryPoint(authenticationEntryPoint))
 				.authorizeHttpRequests(
-						req -> req.requestMatchers("/api/auth/**").permitAll().anyRequest().authenticated())
+						req -> req.requestMatchers("/auth/**").permitAll().anyRequest().authenticated())
 				.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();

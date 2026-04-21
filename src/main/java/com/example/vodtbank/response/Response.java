@@ -1,13 +1,10 @@
 package com.example.vodtbank.response;
 
-public class Response<T> {
-	private final int statusCode;
-	private final String message;
-	private final T data;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-	public Response(int statusCode, String message, T data) {
-		this.statusCode = statusCode;
-		this.message = message;
-		this.data = data;
-	}
-}
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public record Response<T> (
+	int statusCode,
+	String message,
+	T data
+) {}
