@@ -1,7 +1,13 @@
 package com.example.vodtbank.config;
 
+import java.nio.charset.StandardCharsets;
+
+import com.example.vodtbank.authentication.dto.SignUpRequest;
+import com.example.vodtbank.authentication.entity.User;
 import com.example.vodtbank.common.dto.BaseDto;
 import com.example.vodtbank.common.entity.BaseEntity;
+import com.google.common.hash.BloomFilter;
+import com.google.common.hash.Funnels;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.convention.MatchingStrategies;
@@ -13,32 +19,32 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 @Configuration
 public class AppConfig {
 
-    /**
-     * This bean is used to configure the Thymeleaf template engine.
-     */
-    @Bean
-    public SpringTemplateEngine templateEngine() {
-        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix("templates/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode("HTML");
-        templateResolver.setCharacterEncoding("UTF-8");
+	/**
+	 * This bean is used to configure the Thymeleaf template engine.
+	 */
+	@Bean
+	public SpringTemplateEngine templateEngine() {
+		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+		ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+		templateResolver.setPrefix("templates/");
+		templateResolver.setSuffix(".html");
+		templateResolver.setTemplateMode("HTML");
+		templateResolver.setCharacterEncoding("UTF-8");
 
-        templateEngine.setTemplateResolver(templateResolver);
-        return templateEngine;
-    }
+		templateEngine.setTemplateResolver(templateResolver);
+		return templateEngine;
+	}
 
-    /**
-     * This bean is used to configure the ModelMapper for object mapping.
-     */
-    @Bean
-    public ModelMapper modelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration()
-                .setFieldMatchingEnabled(true)
-                .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE)
-                .setMatchingStrategy(MatchingStrategies.STANDARD);
+	/**
+	 * This bean is used to configure the ModelMapper for object mapping.
+	 */
+	@Bean
+	public ModelMapper modelMapper() {
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration()
+				.setFieldMatchingEnabled(true)
+				.setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE)
+				.setMatchingStrategy(MatchingStrategies.STANDARD);
 
 		modelMapper.addMappings(new PropertyMap<BaseDto, BaseEntity>() {
 			@Override
@@ -49,6 +55,19 @@ public class AppConfig {
 			}
 		});
 
-        return modelMapper;
-    }
+		modelMapper.addMappings(new PropertyMap<SignUpRequest, User>() {
+			@Override
+			protected void configure() {
+				skip(destination.getRoles());
+				skip(destination.getPassword());
+			}
+		});
+
+		return modelMapper;
+	}
+
+	@Bean
+	public BloomFilter<String> emailBloomFilter() {
+		return BloomFilter.create(Funnels.stringFunnel(StandardCharsets.UTF_8), 1_000_000, 0.01);
+	}
 }

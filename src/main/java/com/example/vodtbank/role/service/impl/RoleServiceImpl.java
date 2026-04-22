@@ -13,8 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(rollbackFor =  Exception.class)
+@Transactional(rollbackFor =  Throwable.class)
 public class RoleServiceImpl implements RoleService {
+	private static final String DEFAULT_ROLE_NAME = "CUSTOMER";
+
 	private final RoleRepository roleRepository;
 	private final ModelMapper modelMapper;
 
@@ -58,5 +60,12 @@ public class RoleServiceImpl implements RoleService {
 		}
 
 		roleRepository.deleteById(roleId);
+	}
+
+	@Override
+	public Long getDefaultRoleId() {
+		return roleRepository.findByName(DEFAULT_ROLE_NAME)
+				.orElseThrow(() -> new NotFoundException("Default role not found"))
+				.getId();
 	}
 }

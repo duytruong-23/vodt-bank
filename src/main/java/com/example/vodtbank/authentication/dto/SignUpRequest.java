@@ -2,7 +2,6 @@ package com.example.vodtbank.authentication.dto;
 
 import java.util.List;
 
-import com.example.vodtbank.role.dto.RoleDto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -21,5 +20,5 @@ public record SignUpRequest(
 		@NotBlank(message = "Password is required")
 		String password,
 
-		List<RoleDto> roles
+		List<String> roles
 ) {}
