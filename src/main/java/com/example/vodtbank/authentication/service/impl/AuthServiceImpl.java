@@ -3,6 +3,7 @@ package com.example.vodtbank.authentication.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.vodtbank.account.entity.Account;
 import com.example.vodtbank.authentication.dto.ResetPasswordRequest;
 import com.example.vodtbank.authentication.dto.SignInRequest;
 import com.example.vodtbank.authentication.dto.SignInResponse;
@@ -81,12 +82,19 @@ public class AuthServiceImpl implements AuthService {
 
 		User savedUser = userRepository.save(user);
 
-		//TODO: Send welcome email to user
+		//TODO: Create default account for user and send welcome email and notification
+		Account savedAccount = new Account();
+
 		EmailDto emailDto = NotificationHelper.createWelcomeEmail(savedUser.getEmail(), savedUser.getFirstName());
 		NotificationDto notificationDto = NotificationHelper.createWelcomeNotification(savedUser.getEmail());
 		userActionService.sendAndCreateNotification(emailDto, notificationDto, savedUser.getId());
 
-		return null;
+		EmailDto newAccountEmail = NotificationHelper.createNewAccountEmail(savedUser.getEmail(),
+				savedUser.getFirstName(), savedAccount.getAccountNumber());
+		NotificationDto newAccountNotification = NotificationHelper.createNewAccountNotification(savedUser.getEmail());
+		userActionService.sendAndCreateNotification(newAccountEmail, newAccountNotification, savedUser.getId());
+
+		return modelMapper.map(savedUser, UserDto.class);
 	}
 
 	@Override
