@@ -1,8 +1,5 @@
 package com.example.vodtbank.notification.dto;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.example.vodtbank.common.dto.BaseDto;
 import com.example.vodtbank.common.enums.NotificationType;
 import jakarta.validation.constraints.NotBlank;
@@ -13,10 +10,6 @@ public class NotificationDto extends BaseDto {
 	private String recipient;
 	private String body;
 	private NotificationType type;
-
-	// template
-	private String templateName;
-	private Map<String, Object> variables = new HashMap<>();
 
 	public String getSubject() {
 		return subject;
@@ -48,21 +41,5 @@ public class NotificationDto extends BaseDto {
 
 	public void setType(NotificationType type) {
 		this.type = type;
-	}
-
-	public String getTemplateName() {
-		return templateName;
-	}
-
-	public void setTemplateName(String templateName) {
-		this.templateName = templateName;
-	}
-
-	public Map<String, Object> getVariables() {
-		return variables;
-	}
-
-	public void setVariables(Map<String, Object> variables) {
-		this.variables = variables;
 	}
 }

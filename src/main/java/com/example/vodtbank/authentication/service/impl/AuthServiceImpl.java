@@ -13,7 +13,10 @@ import com.example.vodtbank.authentication.repository.UserRepository;
 import com.example.vodtbank.authentication.service.AuthService;
 import com.example.vodtbank.exception.BadRequestException;
 import com.example.vodtbank.exception.NotFoundException;
-import com.example.vodtbank.notification.service.NotificationService;
+import com.example.vodtbank.notification.dto.EmailDto;
+import com.example.vodtbank.notification.dto.NotificationDto;
+import com.example.vodtbank.notification.service.UserActionService;
+import com.example.vodtbank.notification.util.NotificationHelper;
 import com.example.vodtbank.role.entity.Role;
 import com.example.vodtbank.role.repository.RoleRepository;
 import com.example.vodtbank.role.service.RoleService;
@@ -32,19 +35,20 @@ public class AuthServiceImpl implements AuthService {
 	private final RoleRepository roleRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final TokenService tokenService;
-	private final NotificationService notificationService;
 	private final RoleService roleService;
 	private final BloomFilter<String> emailBloomFilter;
 	private final ModelMapper modelMapper;
+	private final UserActionService userActionService;
 
 	public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-			PasswordEncoder passwordEncoder, TokenService tokenService, NotificationService notificationService,
-			RoleService roleService, BloomFilter<String> emailBloomFilter, ModelMapper modelMapper) {
+			PasswordEncoder passwordEncoder, TokenService tokenService,
+			RoleService roleService, BloomFilter<String> emailBloomFilter, ModelMapper modelMapper,
+			UserActionService userActionService) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.tokenService = tokenService;
-		this.notificationService = notificationService;
+		this.userActionService = userActionService;
 		this.roleService = roleService;
 		this.emailBloomFilter = emailBloomFilter;
 		this.modelMapper = modelMapper;
@@ -76,6 +80,12 @@ public class AuthServiceImpl implements AuthService {
 		user.setRoles(roles);
 
 		User savedUser = userRepository.save(user);
+
+		//TODO: Send welcome email to user
+		EmailDto emailDto = NotificationHelper.createWelcomeEmail(savedUser.getEmail(), savedUser.getFirstName());
+		NotificationDto notificationDto = NotificationHelper.createWelcomeNotification(savedUser.getEmail());
+		userActionService.sendAndCreateNotification(emailDto, notificationDto, savedUser.getId());
+
 		return null;
 	}
 
