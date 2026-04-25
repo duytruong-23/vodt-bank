@@ -12,17 +12,18 @@ import com.example.vodtbank.authentication.dto.UserDto;
 import com.example.vodtbank.authentication.entity.User;
 import com.example.vodtbank.authentication.repository.UserRepository;
 import com.example.vodtbank.authentication.service.AuthService;
+import com.example.vodtbank.authentication.service.BloomFilterService;
 import com.example.vodtbank.exception.BadRequestException;
 import com.example.vodtbank.exception.NotFoundException;
 import com.example.vodtbank.notification.dto.EmailDto;
 import com.example.vodtbank.notification.dto.NotificationDto;
 import com.example.vodtbank.notification.service.UserActionService;
 import com.example.vodtbank.notification.util.NotificationHelper;
+import com.example.vodtbank.role.dto.RoleDto;
 import com.example.vodtbank.role.entity.Role;
 import com.example.vodtbank.role.repository.RoleRepository;
 import com.example.vodtbank.role.service.RoleService;
 import com.example.vodtbank.security.token.TokenService;
-import com.google.common.hash.BloomFilter;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,22 +38,22 @@ public class AuthServiceImpl implements AuthService {
 	private final PasswordEncoder passwordEncoder;
 	private final TokenService tokenService;
 	private final RoleService roleService;
-	private final BloomFilter<String> emailBloomFilter;
 	private final ModelMapper modelMapper;
 	private final UserActionService userActionService;
+	private final BloomFilterService bloomFilterService;
 
 	public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
 			PasswordEncoder passwordEncoder, TokenService tokenService,
-			RoleService roleService, BloomFilter<String> emailBloomFilter, ModelMapper modelMapper,
-			UserActionService userActionService) {
+			RoleService roleService, ModelMapper modelMapper,
+			UserActionService userActionService, BloomFilterService bloomFilterService) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.tokenService = tokenService;
 		this.userActionService = userActionService;
 		this.roleService = roleService;
-		this.emailBloomFilter = emailBloomFilter;
 		this.modelMapper = modelMapper;
+		this.bloomFilterService = bloomFilterService;
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
 			);
 		}
 
-		if(isEmailExists(signUpRequest.email())) {
+		if(bloomFilterService.isEmailExisting(signUpRequest.email())) {
 			throw new BadRequestException("Email already exists");
 		}
 
@@ -99,7 +100,26 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public SignInResponse signIn(SignInRequest signInRequest) {
-		return null;
+		final String email = signInRequest.email();
+		final String password = signInRequest.password();
+
+		if(!bloomFilterService.isEmailExisting(signInRequest.email())) {
+			throw new NotFoundException("Email not found");
+		}
+
+		User user = userRepository.findByEmail(email)
+				.orElseThrow(() -> new NotFoundException("Email not found"));
+
+		if(!passwordEncoder.matches(password, user.getPassword())) {
+			throw new BadRequestException("Invalid password");
+		}
+
+		String token = tokenService.generateToken(email);
+		List<RoleDto> roles = user.getRoles().stream()
+				.map(role -> modelMapper.map(role, RoleDto.class))
+				.toList();
+
+		return new SignInResponse(token, roles);
 	}
 
 	@Override
@@ -110,12 +130,5 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public Object updatePasswordViaResetCode(ResetPasswordRequest resetPasswordRequest) {
 		return null;
-	}
-
-	private boolean isEmailExists(String email) {
-		if(emailBloomFilter.mightContain(email)) {
-			return userRepository.findByEmail(email).isPresent();
-		}
-		return false;
 	}
 }

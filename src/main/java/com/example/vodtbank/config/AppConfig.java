@@ -1,13 +1,9 @@
 package com.example.vodtbank.config;
 
-import java.nio.charset.StandardCharsets;
-
 import com.example.vodtbank.authentication.dto.SignUpRequest;
 import com.example.vodtbank.authentication.entity.User;
 import com.example.vodtbank.common.dto.BaseDto;
 import com.example.vodtbank.common.entity.BaseEntity;
-import com.google.common.hash.BloomFilter;
-import com.google.common.hash.Funnels;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.convention.MatchingStrategies;
@@ -64,10 +60,5 @@ public class AppConfig {
 		});
 
 		return modelMapper;
-	}
-
-	@Bean
-	public BloomFilter<String> emailBloomFilter() {
-		return BloomFilter.create(Funnels.stringFunnel(StandardCharsets.UTF_8), 1_000_000, 0.01);
 	}
 }

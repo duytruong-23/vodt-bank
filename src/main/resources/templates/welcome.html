@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Welcome Email</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #f4f0ea;
+            font-family: 'DM Sans', sans-serif;
+            color: #1a1a18;
+            padding: 48px 16px;
+        }
+
+        .email-wrapper {
+            max-width: 580px;
+            margin: 0 auto;
+        }
+
+        /* Header bar */
+        .header {
+            background-color: #1a1a18;
+            padding: 28px 48px;
+            border-radius: 4px 4px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: #e8e2d9;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .header-accent {
+            width: 32px;
+            height: 2px;
+            background: #c9a96e;
+        }
+
+        /* Body */
+        .body {
+            background: #ffffff;
+            padding: 56px 48px 48px;
+        }
+
+        .eyebrow {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #c9a96e;
+            margin-bottom: 20px;
+        }
+
+        .greeting {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 42px;
+            font-weight: 300;
+            color: #1a1a18;
+            line-height: 1.15;
+            margin-bottom: 32px;
+        }
+
+        .greeting span {
+            font-weight: 600;
+            font-style: italic;
+        }
+
+        .divider {
+            width: 48px;
+            height: 2px;
+            background: #c9a96e;
+            margin-bottom: 32px;
+        }
+
+        .body-text {
+            font-size: 15px;
+            font-weight: 300;
+            line-height: 1.8;
+            color: #3d3d3a;
+            margin-bottom: 20px;
+        }
+
+        .highlight-box {
+            border-left: 3px solid #c9a96e;
+            background: #faf8f5;
+            padding: 20px 24px;
+            margin: 36px 0;
+        }
+
+        .highlight-box p {
+            font-size: 14px;
+            font-weight: 400;
+            color: #3d3d3a;
+            line-height: 1.7;
+        }
+
+        .highlight-box strong {
+            font-weight: 500;
+            color: #1a1a18;
+        }
+
+        /* CTA */
+        .cta-wrap {
+            margin: 40px 0 36px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #1a1a18;
+            color: #e8e2d9;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 16px 40px;
+            border-radius: 2px;
+            transition: background 0.2s;
+        }
+
+        .sign-off {
+            margin-top: 40px;
+            padding-top: 32px;
+            border-top: 1px solid #e8e4de;
+        }
+
+        .sign-off p {
+            font-size: 14px;
+            font-weight: 300;
+            color: #3d3d3a;
+            line-height: 1.7;
+        }
+
+        .sign-off .name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a18;
+            margin-top: 16px;
+        }
+
+        .sign-off .title {
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #c9a96e;
+            margin-top: 4px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #1a1a18;
+            padding: 28px 48px;
+            border-radius: 0 0 4px 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .footer p {
+            font-size: 11px;
+            font-weight: 300;
+            color: #7a7a72;
+            letter-spacing: 0.04em;
+        }
+
+        .footer a {
+            color: #7a7a72;
+            text-decoration: underline;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            font-size: 11px;
+            color: #7a7a72;
+            text-decoration: none;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+<div class="email-wrapper">
+
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">VODT Bank</div>
+        <div class="header-accent"></div>
+    </div>
+
+    <!-- Body -->
+    <div class="body">
+        <p class="eyebrow">Welcome aboard</p>
+
+        <h1 class="greeting">
+            Hello,<br><span>{{name}}</span>
+        </h1>
+
+        <div class="divider"></div>
+
+        <p class="body-text">
+            We're genuinely glad you're here. Your account is all set up and ready to go — everything you need to get started is just a click away.
+        </p>
+
+        <p class="body-text">
+            We built this experience with care, and we hope it shows. Whether you're here to explore, create, or get things done, we're here to support every step of the way.
+        </p>
+
+        <div class="highlight-box">
+            <p>
+                <strong>What's next?</strong> Head to your dashboard to complete your profile, explore key features, and customize your experience to fit exactly how you work.
+            </p>
+        </div>
+
+        <div class="cta-wrap">
+            <a href="#" class="cta-button">Get Started</a>
+        </div>
+
+        <div class="sign-off">
+            <p>With warmth,</p>
+            <p class="name">The Team</p>
+            <p class="title">VODT Bank</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2026 VODT Bank. All rights reserved.<br>
+            123 Main Street, City, Country &nbsp;·&nbsp;
+            <a href="#">Unsubscribe</a>
+        </p>
+        <div class="footer-links">
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Help</a>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
