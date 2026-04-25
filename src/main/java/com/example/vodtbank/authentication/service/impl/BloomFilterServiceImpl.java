@@ -2,6 +2,8 @@ package com.example.vodtbank.authentication.service.impl;
 
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.example.vodtbank.authentication.repository.UserRepository;
@@ -10,6 +12,7 @@ import com.example.vodtbank.config.BloomFilterConfig;
 import com.google.common.hash.BloomFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +20,7 @@ public class BloomFilterServiceImpl implements BloomFilterService {
 	private static final int BATCH_SIZE = 5;
 	private final Object lock = new Object();
 	private final AtomicInteger counter = new AtomicInteger(0);
+	private final ExecutorService executor = Executors.newSingleThreadExecutor();
 	private final Log logger = LogFactory.getLog(getClass());
 
 	private final BloomFilter<String> bloomFilter;
@@ -36,7 +40,8 @@ public class BloomFilterServiceImpl implements BloomFilterService {
 		}
 	}
 
-	private void persistBloomFilter() {
+	@Scheduled(fixedRate = 60000)
+	public void persistBloomFilter() {
 		// Double-check locking to minimize synchronization overhead
 		if(counter.get() < BATCH_SIZE) {
 			return;
@@ -47,14 +52,19 @@ public class BloomFilterServiceImpl implements BloomFilterService {
 				return;
 			}
 
-			try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(BloomFilterConfig.FILE_PATH))) {
+			counter.set(0);
 
-				oos.writeObject(bloomFilter);
+			executor.submit(() -> {
+				try(ObjectOutputStream oos = new ObjectOutputStream(
+						new FileOutputStream(BloomFilterConfig.FILE_PATH))) {
 
-				counter.set(0);
-			} catch(Exception e) {
-				logger.error(e);
-			}
+					oos.writeObject(bloomFilter);
+
+					counter.set(0);
+				} catch(Exception e) {
+					logger.error(e);
+				}
+			});
 		}
 	}
 
