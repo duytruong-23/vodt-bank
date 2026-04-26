@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Welcome Email</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap');
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             background-color: #f4f0ea;
@@ -211,22 +215,25 @@
         <p class="eyebrow">Welcome aboard</p>
 
         <h1 class="greeting">
-            Hello,<br><span>{{name}}</span>
+            Hello,<br><span th:text="${name}">John Doe</span>
         </h1>
 
         <div class="divider"></div>
 
         <p class="body-text">
-            We're genuinely glad you're here. Your account is all set up and ready to go — everything you need to get started is just a click away.
+            We're genuinely glad you're here. Your account is all set up and ready to go — everything you need to get
+            started is just a click away.
         </p>
 
         <p class="body-text">
-            We built this experience with care, and we hope it shows. Whether you're here to explore, create, or get things done, we're here to support every step of the way.
+            We built this experience with care, and we hope it shows. Whether you're here to explore, create, or get
+            things done, we're here to support every step of the way.
         </p>
 
         <div class="highlight-box">
             <p>
-                <strong>What's next?</strong> Head to your dashboard to complete your profile, explore key features, and customize your experience to fit exactly how you work.
+                <strong>What's next?</strong> Head to your dashboard to complete your profile, explore key features, and
+                customize your experience to fit exactly how you work.
             </p>
         </div>
 

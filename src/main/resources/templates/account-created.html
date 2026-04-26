@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Account Created</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #eef1f7;
+            font-family: 'Inter', sans-serif;
+            color: #1c2333;
+            padding: 48px 16px;
+        }
+
+        .email-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ── Header ── */
+        .header {
+            background: linear-gradient(135deg, #0f1f45 0%, #1a3a7a 100%);
+            padding: 36px 48px;
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -60px;
+            left: 30%;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 36px;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.04em;
+        }
+
+        .logo span {
+            color: #5b9cf6;
+        }
+
+        .badge {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #0f1f45;
+            background: #5b9cf6;
+            padding: 5px 14px;
+            border-radius: 20px;
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 34px;
+            font-weight: 600;
+            color: #ffffff;
+            line-height: 1.2;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            font-weight: 300;
+            color: #8eaadf;
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 0.02em;
+        }
+
+        /* ── Body ── */
+        .body {
+            background: #ffffff;
+            padding: 48px 48px 40px;
+        }
+
+        .greeting {
+            font-size: 16px;
+            font-weight: 400;
+            color: #3d4f6e;
+            margin-bottom: 12px;
+        }
+
+        .greeting strong {
+            color: #0f1f45;
+            font-weight: 600;
+        }
+
+        .intro {
+            font-size: 14px;
+            font-weight: 300;
+            line-height: 1.85;
+            color: #536080;
+            margin-bottom: 36px;
+        }
+
+        /* ── Account Card ── */
+        .account-card {
+            background: linear-gradient(135deg, #0f1f45 0%, #1a3a7a 100%);
+            border-radius: 12px;
+            padding: 32px 36px;
+            margin-bottom: 36px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .account-card::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: rgba(91, 156, 246, 0.12);
+        }
+
+        .account-card::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 20px;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .card-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #5b9cf6;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .card-account-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: 0.06em;
+        }
+
+        .card-right {
+            text-align: right;
+        }
+
+        .card-type {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #8eaadf;
+            margin-bottom: 4px;
+        }
+
+        .card-currency {
+            font-size: 22px;
+            font-weight: 600;
+            color: #ffffff;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* ── Details Table ── */
+        .section-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #9aaabf;
+            margin-bottom: 16px;
+        }
+
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 36px;
+        }
+
+        .detail-table tr {
+            border-bottom: 1px solid #f0f2f7;
+        }
+
+        .detail-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .detail-table td {
+            padding: 14px 0;
+            font-size: 14px;
+        }
+
+        .detail-table td:first-child {
+            color: #7a8aa8;
+            font-weight: 400;
+            width: 48%;
+        }
+
+        .detail-table td:last-child {
+            color: #1c2333;
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .detail-table .highlight-val {
+            color: #1a3a7a;
+            font-weight: 600;
+        }
+
+        /* ── Info Box ── */
+        .info-box {
+            background: #f4f7ff;
+            border: 1px solid #d6e2fb;
+            border-radius: 8px;
+            padding: 20px 24px;
+            margin-bottom: 36px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .info-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .info-box p {
+            font-size: 13px;
+            font-weight: 300;
+            line-height: 1.75;
+            color: #3d5080;
+        }
+
+        .info-box strong {
+            font-weight: 500;
+            color: #1a3a7a;
+        }
+
+        /* ── CTA ── */
+        .cta-wrap {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #0f1f45 0%, #1a3a7a 100%);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 16px 48px;
+            border-radius: 4px;
+        }
+
+        .cta-secondary {
+            display: block;
+            margin-top: 14px;
+            font-size: 12px;
+            color: #9aaabf;
+            text-align: center;
+        }
+
+        .cta-secondary a {
+            color: #1a3a7a;
+            text-decoration: underline;
+        }
+
+        /* ── Sign Off ── */
+        .sign-off {
+            border-top: 1px solid #eef1f7;
+            padding-top: 32px;
+        }
+
+        .sign-off p {
+            font-size: 14px;
+            font-weight: 300;
+            color: #536080;
+            line-height: 1.7;
+        }
+
+        .sign-off .sender-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 17px;
+            font-weight: 600;
+            color: #0f1f45;
+            margin-top: 14px;
+        }
+
+        .sign-off .sender-title {
+            font-size: 11px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #5b9cf6;
+            margin-top: 3px;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            background: #0f1f45;
+            padding: 28px 48px;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+
+        .footer-links a {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #8eaadf;
+            text-decoration: none;
+        }
+
+        .footer-divider {
+            width: 40px;
+            height: 1px;
+            background: #2a3f6a;
+            margin: 0 auto 16px;
+        }
+
+        .footer p {
+            font-size: 11px;
+            font-weight: 300;
+            color: #4a6090;
+            text-align: center;
+            line-height: 1.7;
+        }
+
+        .footer a {
+            color: #4a6090;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="email-wrapper">
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-top">
+            <div class="logo"><span>VODT</span>&nbspBank</div>
+            <div class="badge">Account Confirmed</div>
+        </div>
+        <div class="header-title">Your account<br>is ready.</div>
+        <div class="header-subtitle">Everything is set up and waiting for you.</div>
+    </div>
+
+    <!-- Body -->
+    <div class="body">
+
+        <p class="greeting">Dear <strong th:text="${name}">John Doe</strong>,</p>
+        <p class="intro">
+            Congratulations — your new account has been successfully created and is now active.
+            Below you'll find your account details for your records. Please keep this information safe and do not share
+            it with anyone.
+        </p>
+
+        <!-- Account Card -->
+        <div class="account-card">
+            <div class="card-label">Account Overview</div>
+            <div class="card-row">
+                <div>
+                    <div style="font-size:11px;color:#8eaadf;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;">
+                        Account Number
+                    </div>
+                    <div class="card-account-number" th:text="${accountNumber}">0000-0000-0000</div>
+                </div>
+                <div class="card-right">
+                    <div class="card-type" th:text="${accountType}">Savings Account</div>
+                    <div class="card-currency" th:text="${currency}">USD</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail Table -->
+        <div class="section-label">Account Details</div>
+        <table class="detail-table">
+            <tr>
+                <td>Account Holder</td>
+                <td class="highlight-val" th:text="${name}">John Doe</td>
+            </tr>
+            <tr>
+                <td>Account Number</td>
+                <td class="highlight-val" th:text="${accountNumber}">0000-0000-0000</td>
+            </tr>
+            <tr>
+                <td>Account Type</td>
+                <td th:text="${accountType}">Savings Account</td>
+            </tr>
+            <tr>
+                <td>Currency</td>
+                <td th:text="${currency}">USD</td>
+            </tr>
+            <tr>
+                <td>Account Status</td>
+                <td style="color:#1a7a4a;font-weight:600;">● Active</td>
+            </tr>
+            <tr>
+                <td>Date Opened</td>
+                <td th:text="${openDate}">January 1, 2026</td>
+            </tr>
+        </table>
+
+        <!-- Info Box -->
+        <div class="info-box">
+            <div class="info-icon">🔒</div>
+            <p>
+                <strong>Keep your account secure.</strong> We will never ask for your full account number or password
+                via email or phone. If you received this email unexpectedly, please <a href="#" style="color:#1a3a7a;">contact
+                our support team</a> immediately.
+            </p>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-wrap">
+            <a href="#" class="cta-button">Access Your Account</a>
+            <span class="cta-secondary">
+          Need help? <a href="#">Visit our Help Center</a>
+        </span>
+        </div>
+
+        <!-- Sign Off -->
+        <div class="sign-off">
+            <p>Warm regards,</p>
+            <div class="sender-name">VODT Bank Team</div>
+            <div class="sender-title">Customer Account Services</div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Use</a>
+            <a href="#">Security</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="footer-divider"></div>
+        <p>
+            © 2026 VODT Bank Financial Services. All rights reserved.<br>
+            123 Finance Avenue, City, Country &nbsp;·&nbsp; <a href="#">Unsubscribe</a>
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>
