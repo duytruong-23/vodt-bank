@@ -10,6 +10,8 @@ import com.example.vodtbank.notification.dto.NotificationDto;
 public class NotificationHelper {
 	private static final String WELCOME_SUBJECT = "Welcome to VodtBank!";
 	private static final String ACCOUNT_CREATED_SUBJECT = "Your New Account at VodtBank is Created!";
+	private static final String PASSWORD_RESET_SUBJECT = "Password Reset Code";
+	private static final String PASSWORD_UPDATE_SUBJECT = "Your Password Has Been Updated";
 
 	private NotificationHelper() {
 		// Private constructor to prevent instantiation
@@ -47,6 +49,42 @@ public class NotificationHelper {
 	public static NotificationDto createNewAccountNotification(String recipient) {
 		NotificationDto notificationDto = new NotificationDto();
 		notificationDto.setSubject(ACCOUNT_CREATED_SUBJECT);
+		notificationDto.setRecipient(recipient);
+		return notificationDto;
+	}
+
+	public static NotificationDto createPasswordResetNotification(String recipient) {
+		NotificationDto notificationDto = new NotificationDto();
+		notificationDto.setSubject(PASSWORD_RESET_SUBJECT);
+		notificationDto.setRecipient(recipient);
+		return notificationDto;
+	}
+
+	public static EmailDto createPasswordResetEmail(String recipient, String name, String resetLink, String code) {
+		Map<String, Object> variables = Map.of("name", name, "resetLink", resetLink + code);
+
+		EmailDto emailDto = new EmailDto();
+		emailDto.setToEmail(recipient);
+		emailDto.setSubject(PASSWORD_RESET_SUBJECT);
+		emailDto.setTemplateName("password-reset");
+		emailDto.setVariables(variables);
+		return emailDto;
+	}
+
+	public static EmailDto createPasswordUpdateEmail(String recipient, String name) {
+		Map<String, Object> variables = Map.of("name", name);
+
+		EmailDto emailDto = new EmailDto();
+		emailDto.setToEmail(recipient);
+		emailDto.setSubject(PASSWORD_UPDATE_SUBJECT);
+		emailDto.setTemplateName("password-update");
+		emailDto.setVariables(variables);
+		return emailDto;
+	}
+
+	public  static NotificationDto createPasswordUpdateNotification(String recipient) {
+		NotificationDto notificationDto = new NotificationDto();
+		notificationDto.setSubject(PASSWORD_UPDATE_SUBJECT);
 		notificationDto.setRecipient(recipient);
 		return notificationDto;
 	}

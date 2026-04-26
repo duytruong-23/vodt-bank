@@ -40,3 +40,7 @@ logging:
   level:
     org.springframework.security: TRACE
     com.vodtbank: TRACE
+
+### Password Configuration ###
+password:
+  base-url: ${PASSWORD_RESET_LINK:http://localhost:8090/api/reset-password?code=}

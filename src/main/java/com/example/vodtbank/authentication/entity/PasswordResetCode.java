@@ -24,4 +24,36 @@ public class PasswordResetCode extends BaseEntity {
 	@OneToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	private User user;
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public LocalDateTime getExpirationDate() {
+		return expirationDate;
+	}
+
+	public void setExpirationDate(LocalDateTime expirationDate) {
+		this.expirationDate = expirationDate;
+	}
+
+	public boolean isUsed() {
+		return used;
+	}
+
+	public void setUsed(boolean used) {
+		this.used = used;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 }
