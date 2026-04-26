@@ -9,7 +9,6 @@ import com.example.vodtbank.notification.repository.NotificationRepository;
 import com.example.vodtbank.notification.service.NotificationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -27,7 +26,7 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	@Transactional
 	public NotificationDto createNotification(NotificationDto notificationDto, Long userId) {
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new NotFoundException("User with id " + userId + " not found"));

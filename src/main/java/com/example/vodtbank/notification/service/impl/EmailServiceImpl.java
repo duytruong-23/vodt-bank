@@ -12,6 +12,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.util.StringUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -30,6 +32,7 @@ public class EmailServiceImpl implements EmailService {
 
 	@Override
 	@Async
+	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
 	public void sendEmail(EmailDto emailDto) {
 		if(emailDto == null) {
 			return;

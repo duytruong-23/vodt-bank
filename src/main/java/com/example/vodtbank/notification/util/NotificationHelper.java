@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.example.vodtbank.common.enums.AccountType;
 import com.example.vodtbank.common.enums.Currency;
+import com.example.vodtbank.common.enums.NotificationType;
 import com.example.vodtbank.notification.dto.EmailDto;
 import com.example.vodtbank.notification.dto.NotificationDto;
 
@@ -21,6 +22,8 @@ public class NotificationHelper {
 		NotificationDto notificationDto = new NotificationDto();
 		notificationDto.setSubject(WELCOME_SUBJECT);
 		notificationDto.setRecipient(recipient);
+		notificationDto.setBody("Welcome to VodtBank! We're excited to have you on board.");
+		notificationDto.setType(NotificationType.EMAIL);
 		return notificationDto;
 	}
 
@@ -50,6 +53,8 @@ public class NotificationHelper {
 		NotificationDto notificationDto = new NotificationDto();
 		notificationDto.setSubject(ACCOUNT_CREATED_SUBJECT);
 		notificationDto.setRecipient(recipient);
+		notificationDto.setBody("New Account Created!");
+		notificationDto.setType(NotificationType.EMAIL);
 		return notificationDto;
 	}
 
@@ -57,6 +62,8 @@ public class NotificationHelper {
 		NotificationDto notificationDto = new NotificationDto();
 		notificationDto.setSubject(PASSWORD_RESET_SUBJECT);
 		notificationDto.setRecipient(recipient);
+		notificationDto.setBody("Password Reset Code!");
+		notificationDto.setType(NotificationType.EMAIL);
 		return notificationDto;
 	}
 
@@ -86,6 +93,8 @@ public class NotificationHelper {
 		NotificationDto notificationDto = new NotificationDto();
 		notificationDto.setSubject(PASSWORD_UPDATE_SUBJECT);
 		notificationDto.setRecipient(recipient);
+		notificationDto.setBody("Your password has been updated successfully!");
+		notificationDto.setType(NotificationType.EMAIL);
 		return notificationDto;
 	}
 }

@@ -15,6 +15,7 @@ public record SignUpRequest(
 		@Email
 		String email,
 
+		@NotBlank(message = "Phone number is required")
 		String phoneNumber,
 
 		@NotBlank(message = "Password is required")

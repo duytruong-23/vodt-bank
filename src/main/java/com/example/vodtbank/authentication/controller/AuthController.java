@@ -7,6 +7,7 @@ import com.example.vodtbank.authentication.dto.SignUpRequest;
 import com.example.vodtbank.authentication.dto.UserDto;
 import com.example.vodtbank.authentication.service.AuthService;
 import com.example.vodtbank.response.Response;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,14 +24,14 @@ public class AuthController {
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<Response<UserDto>> signUp(@RequestBody SignUpRequest signUpRequest) {
+	public ResponseEntity<Response<UserDto>> signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
 		UserDto userDto = authService.signUp(signUpRequest);
 
 		return ResponseEntity.ok(Response.success("User registered successfully", userDto));
 	}
 
 	@PostMapping("/signin")
-	public ResponseEntity<Response<SignInResponse>> signIn(@RequestBody SignInRequest signInRequest) {
+	public ResponseEntity<Response<SignInResponse>> signIn(@RequestBody @Valid SignInRequest signInRequest) {
 		SignInResponse signInResponse = authService.signIn(signInRequest);
 
 		return ResponseEntity.ok(Response.success("User signed in successfully", signInResponse));
@@ -44,7 +45,8 @@ public class AuthController {
 	}
 
 	@PostMapping("/reset-password")
-	public ResponseEntity<Response<String>> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+	public ResponseEntity<Response<String>> resetPassword(
+			@RequestBody @Valid ResetPasswordRequest resetPasswordRequest) {
 		authService.updatePasswordViaResetCode(resetPasswordRequest);
 
 		return ResponseEntity.ok(Response.noContent("Password reset successfully"));
