@@ -22,7 +22,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException {
-		Response<?> responseBody = new Response<>(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage(), null);
+		Response<?> responseBody = Response.withError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
 
 		response.setContentType("application/json");
 		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

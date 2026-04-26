@@ -11,7 +11,7 @@ public interface AuthService {
 
 	SignInResponse signIn(SignInRequest signInRequest);
 
-	void forgetPassword(String email);
+	void forgotPassword(String email);
 
 	void updatePasswordViaResetCode(ResetPasswordRequest resetPasswordRequest);
 

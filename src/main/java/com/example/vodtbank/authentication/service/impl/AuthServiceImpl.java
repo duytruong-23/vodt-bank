@@ -137,7 +137,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public void forgetPassword(String email) {
+	public void forgotPassword(String email) {
 		if(!bloomFilterService.isEmailExisting(email)) {
 			throw new NotFoundException("Email not found");
 		}
