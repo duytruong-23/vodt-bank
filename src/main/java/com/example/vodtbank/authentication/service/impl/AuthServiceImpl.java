@@ -20,9 +20,10 @@ import com.example.vodtbank.exception.BadRequestException;
 import com.example.vodtbank.exception.NotFoundException;
 import com.example.vodtbank.notification.dto.EmailDto;
 import com.example.vodtbank.notification.dto.NotificationDto;
+import com.example.vodtbank.notification.helper.NotificationHelper;
 import com.example.vodtbank.notification.service.UserActionService;
-import com.example.vodtbank.notification.util.NotificationHelper;
 import com.example.vodtbank.role.dto.RoleDto;
+import com.example.vodtbank.role.dto.SystemRole;
 import com.example.vodtbank.role.entity.Role;
 import com.example.vodtbank.role.repository.RoleRepository;
 import com.example.vodtbank.role.service.RoleService;
@@ -71,15 +72,20 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public UserDto signUp(SignUpRequest signUpRequest) {
+		List<String> roleNames = signUpRequest.roles();
 		final List<Role> roles = new ArrayList<>();
 
-		if(signUpRequest.roles() == null || signUpRequest.roles().isEmpty()) {
+		if(roleNames == null || roleNames.isEmpty()) {
 			Long defaultRoleId = roleService.getDefaultRoleId();
 			Role defaultRole = roleRepository.findById(defaultRoleId)
 					.orElseThrow(() -> new NotFoundException("Default role with id " + defaultRoleId + " not found"));
 			roles.add(defaultRole);
 		} else {
-			roles.addAll(signUpRequest.roles().stream()
+			if(roleNames.stream().anyMatch(SystemRole::isAdminRole)) {
+				throw new BadRequestException("Cannot assign role " + SystemRole.ADMIN.name() + " to user");
+			}
+
+			roles.addAll(roleNames.stream()
 					.map(roleName -> roleRepository.findByName(roleName)
 							.orElseThrow(() -> new NotFoundException("Role with name " + roleName + " not found")))
 					.toList()
@@ -97,16 +103,16 @@ public class AuthServiceImpl implements AuthService {
 		User savedUser = userRepository.save(user);
 
 		//TODO: Create default account for user and send welcome email and notification
-//		Account savedAccount = new Account();
+		//		Account savedAccount = new Account();
 
 		EmailDto emailDto = NotificationHelper.createWelcomeEmail(savedUser.getEmail(), savedUser.getFirstName());
 		NotificationDto notificationDto = NotificationHelper.createWelcomeNotification(savedUser.getEmail());
 		userActionService.sendAndCreateNotification(emailDto, notificationDto, savedUser.getId());
 
-//		EmailDto newAccountEmail = NotificationHelper.createNewAccountEmail(savedUser.getEmail(),
-//				savedUser.getFirstName(), savedAccount.getAccountNumber());
-//		NotificationDto newAccountNotification = NotificationHelper.createNewAccountNotification(savedUser.getEmail());
-//		userActionService.sendAndCreateNotification(newAccountEmail, newAccountNotification, savedUser.getId());
+		//		EmailDto newAccountEmail = NotificationHelper.createNewAccountEmail(savedUser.getEmail(),
+		//				savedUser.getFirstName(), savedAccount.getAccountNumber());
+		//		NotificationDto newAccountNotification = NotificationHelper.createNewAccountNotification(savedUser.getEmail());
+		//		userActionService.sendAndCreateNotification(newAccountEmail, newAccountNotification, savedUser.getId());
 
 		return modelMapper.map(savedUser, UserDto.class);
 	}

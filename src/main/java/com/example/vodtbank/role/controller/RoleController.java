@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/roles")
-@PreAuthorize("hasAuthority('ADMIN')")
+@PreAuthorize("hasAuthority(T(com.example.vodtbank.role.dto.SystemRole).ADMIN.name())")
 public class RoleController {
 	private final RoleService roleService;
 

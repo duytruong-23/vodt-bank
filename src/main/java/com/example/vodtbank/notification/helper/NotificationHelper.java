@@ -1,4 +1,4 @@
-package com.example.vodtbank.notification.util;
+package com.example.vodtbank.notification.helper;
 
 import java.util.Map;
 
