@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BloomFilterServiceImpl implements BloomFilterService {
-	private static final int BATCH_SIZE = 5;
+	private static final int BATCH_SIZE = 1;
 	private final Object lock = new Object();
 	private final AtomicInteger counter = new AtomicInteger(0);
 	private final ExecutorService executor = Executors.newSingleThreadExecutor();

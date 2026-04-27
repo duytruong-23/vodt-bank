@@ -39,3 +39,6 @@ build/
 ### Jwt secret ###
 public.pem
 private.pem
+
+### Other ###
+*.ser

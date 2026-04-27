@@ -1,21 +1,35 @@
 package com.example.vodtbank.config;
 
+import java.util.List;
+
 import com.example.vodtbank.authentication.dto.SignUpRequest;
 import com.example.vodtbank.authentication.entity.User;
+import com.example.vodtbank.authentication.repository.UserRepository;
 import com.example.vodtbank.common.dto.BaseDto;
 import com.example.vodtbank.common.entity.BaseEntity;
+import com.example.vodtbank.role.dto.SystemRole;
+import com.example.vodtbank.role.entity.Role;
+import com.example.vodtbank.role.repository.RoleRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 @Configuration
 @EnableScheduling
 public class AppConfig {
+	@Value("${admin.email}")
+	private String adminEmail;
+
+	@Value("${admin.password}")
+	private String adminPassword;
 
 	/**
 	 * This bean is used to configure the Thymeleaf template engine.
@@ -62,5 +76,24 @@ public class AppConfig {
 		});
 
 		return modelMapper;
+	}
+
+	@Bean
+	CommandLineRunner initAdmin(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder) {
+		return args -> {
+			if (userRepository.findByEmail(adminEmail).isEmpty()) {
+				User admin = new User();
+				admin.setFirstName("Admin");
+				admin.setEmail(adminEmail);
+				admin.setPassword(encoder.encode(adminPassword));
+
+				Role adminRole = roleRepository.findByName(SystemRole.ADMIN.name())
+						.orElseThrow(() -> new RuntimeException("Admin role not found in database"));
+
+				admin.setRoles(List.of(adminRole));
+
+				userRepository.save(admin);
+			}
+		};
 	}
 }

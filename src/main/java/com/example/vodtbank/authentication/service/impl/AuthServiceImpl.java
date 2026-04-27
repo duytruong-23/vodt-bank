@@ -100,6 +100,7 @@ public class AuthServiceImpl implements AuthService {
 		user.setPassword(passwordEncoder.encode(signUpRequest.password()));
 		user.setRoles(roles);
 
+		bloomFilterService.addEmail(user.getEmail());
 		User savedUser = userRepository.save(user);
 
 		//TODO: Create default account for user and send welcome email and notification

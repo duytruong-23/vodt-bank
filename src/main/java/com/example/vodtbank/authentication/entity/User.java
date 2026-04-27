@@ -25,7 +25,7 @@ import jakarta.validation.constraints.NotBlank;
 @Table(name = "users")
 public class User extends BaseEntity {
 
-    @Column
+    @Column(nullable = false)
     private String firstName;
 
     @Column
@@ -39,7 +39,7 @@ public class User extends BaseEntity {
     @NotBlank(message = "Email is required")
     private String email;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
     @Column
