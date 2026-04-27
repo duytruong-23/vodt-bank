@@ -18,6 +18,7 @@ import com.example.vodtbank.notification.dto.EmailDto;
 import com.example.vodtbank.notification.dto.NotificationDto;
 import com.example.vodtbank.notification.helper.NotificationHelper;
 import com.example.vodtbank.notification.service.UserActionService;
+import com.example.vodtbank.role.dto.SystemRole;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.modelmapper.ModelMapper;
@@ -68,7 +69,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional(readOnly = true)
 	public Page<UserDto> getUsers(int page, int size) {
-		Page<User> users = userRepository.findAll(PageRequest.of(page, size));
+		// page - 1 because Spring Data JPA pages are 0-indexed
+		Page<User> users = userRepository.findAllExcludeRole(SystemRole.ADMIN.name(), PageRequest.of(page - 1, size));
 
 		return users.map(user -> modelMapper.map(user, UserDto.class));
 	}
@@ -125,11 +127,11 @@ public class UserServiceImpl implements UserService {
 
 			originalFilename = StringUtils.cleanPath(file.getOriginalFilename());
 			String fileExtension = StringUtils.getFilenameExtension(originalFilename);
-			String newFilename = new StringJoiner(FILE_NAME_SEPARATOR)
+			fileExtension = StringUtils.hasLength(fileExtension) ? "." + fileExtension : "";
+			String newFilename = new StringJoiner(FILE_NAME_SEPARATOR, "", fileExtension)
 					.add("profile")
 					.add(String.valueOf(user.getId()))
 					.add(UUID.randomUUID().toString())
-					.add(fileExtension)
 					.toString();
 
 			Path newFilePath = uploadPath.resolve(newFilename);
@@ -140,10 +142,9 @@ public class UserServiceImpl implements UserService {
 
 			userRepository.save(user);
 
-
 		} catch(IOException e) {
 			log.error(e);
-			 throw new RuntimeException("Failed to upload profile picture", e);
+			throw new RuntimeException("Failed to upload profile picture", e);
 		}
 
 		return user.getProfilePictureUrl();
