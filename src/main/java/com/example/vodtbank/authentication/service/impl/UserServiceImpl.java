@@ -150,7 +150,8 @@ public class UserServiceImpl implements UserService {
 		return user.getProfilePictureUrl();
 	}
 
-	private String getCurrentUserEmail() {
+	@Override
+	public String getCurrentUserEmail() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		if(authentication == null) {

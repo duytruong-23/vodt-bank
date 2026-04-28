@@ -3,6 +3,8 @@ package com.example.vodtbank.authentication.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.vodtbank.account.dto.AccountDto;
+import com.example.vodtbank.account.service.AccountService;
 import com.example.vodtbank.authentication.dto.PasswordResetCodeDto;
 import com.example.vodtbank.authentication.dto.ResetPasswordRequest;
 import com.example.vodtbank.authentication.dto.SignInRequest;
@@ -16,6 +18,7 @@ import com.example.vodtbank.authentication.repository.UserRepository;
 import com.example.vodtbank.authentication.service.AuthService;
 import com.example.vodtbank.authentication.service.BloomFilterService;
 import com.example.vodtbank.authentication.service.PasswordResetCodeService;
+import com.example.vodtbank.common.enums.AccountType;
 import com.example.vodtbank.exception.BadRequestException;
 import com.example.vodtbank.exception.NotFoundException;
 import com.example.vodtbank.notification.dto.EmailDto;
@@ -48,6 +51,7 @@ public class AuthServiceImpl implements AuthService {
 	private final BloomFilterService bloomFilterService;
 	private final PasswordResetCodeService passwordResetCodeService;
 	private final PasswordResetCodeRepository passwordResetCodeRepository;
+	private final AccountService accountService;
 
 	@Value("${password.base-url}")
 	private String passwordResetBaseUrl;
@@ -57,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
 			RoleService roleService, ModelMapper modelMapper,
 			UserActionService userActionService, BloomFilterService bloomFilterService,
 			PasswordResetCodeService passwordResetCodeService,
-			PasswordResetCodeRepository passwordResetCodeRepository) {
+			PasswordResetCodeRepository passwordResetCodeRepository, AccountService accountService) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.passwordEncoder = passwordEncoder;
@@ -68,6 +72,7 @@ public class AuthServiceImpl implements AuthService {
 		this.bloomFilterService = bloomFilterService;
 		this.passwordResetCodeService = passwordResetCodeService;
 		this.passwordResetCodeRepository = passwordResetCodeRepository;
+		this.accountService = accountService;
 	}
 
 	@Override
@@ -103,17 +108,16 @@ public class AuthServiceImpl implements AuthService {
 		bloomFilterService.addEmail(user.getEmail());
 		User savedUser = userRepository.save(user);
 
-		//TODO: Create default account for user and send welcome email and notification
-		//		Account savedAccount = new Account();
+		AccountDto savedAccount = accountService.createAccount(AccountType.SAVINGS, savedUser.getEmail());
 
 		EmailDto emailDto = NotificationHelper.createWelcomeEmail(savedUser.getEmail(), savedUser.getFirstName());
 		NotificationDto notificationDto = NotificationHelper.createWelcomeNotification(savedUser.getEmail());
 		userActionService.sendAndCreateNotification(emailDto, notificationDto, savedUser.getId());
 
-		//		EmailDto newAccountEmail = NotificationHelper.createNewAccountEmail(savedUser.getEmail(),
-		//				savedUser.getFirstName(), savedAccount.getAccountNumber());
-		//		NotificationDto newAccountNotification = NotificationHelper.createNewAccountNotification(savedUser.getEmail());
-		//		userActionService.sendAndCreateNotification(newAccountEmail, newAccountNotification, savedUser.getId());
+		EmailDto newAccountEmail = NotificationHelper.createNewAccountEmail(savedUser.getEmail(),
+				savedUser.getFirstName(), savedAccount.getAccountNumber(), savedAccount.getAccountType(), savedAccount.getCurrency());
+		NotificationDto newAccountNotification = NotificationHelper.createNewAccountNotification(savedUser.getEmail());
+		userActionService.sendAndCreateNotification(newAccountEmail, newAccountNotification, savedUser.getId());
 
 		return modelMapper.map(savedUser, UserDto.class);
 	}

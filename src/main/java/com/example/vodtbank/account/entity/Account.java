@@ -1,6 +1,7 @@
 package com.example.vodtbank.account.entity;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.example.vodtbank.authentication.entity.User;
@@ -43,6 +44,8 @@ public class Account extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Currency currency;
+
+	private LocalDateTime closedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -91,6 +94,14 @@ public class Account extends BaseEntity {
 
 	public void setCurrency(Currency currency) {
 		this.currency = currency;
+	}
+
+	public LocalDateTime getClosedAt() {
+		return closedAt;
+	}
+
+	public void setClosedAt(LocalDateTime closedAt) {
+		this.closedAt = closedAt;
 	}
 
 	public User getUser() {

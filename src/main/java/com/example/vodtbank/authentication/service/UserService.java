@@ -13,4 +13,6 @@ public interface UserService {
 	void updatePassword(UpdatePasswordRequest request);
 
 	String uploadProfilePicture(MultipartFile file);
+
+	String getCurrentUserEmail();
 }

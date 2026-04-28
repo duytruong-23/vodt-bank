@@ -61,11 +61,11 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Account> accounts;
+    private List<Account> accounts = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
-	private List<Notification> notifications;
+	private List<Notification> notifications = new ArrayList<>();
 
 	public String getFirstName() {
 		return firstName;

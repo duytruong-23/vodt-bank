@@ -36,10 +36,10 @@ public class NotificationHelper {
 		return emailDto;
 	}
 
-	public static EmailDto createNewAccountEmail(String recipient, String name, String accountNumber) {
+	public static EmailDto createNewAccountEmail(String recipient, String name, String accountNumber,
+			AccountType accountType, Currency currency) {
 		Map<String, Object> variables = Map.of("accountNumber", accountNumber, "name", name, "accountType",
-				AccountType.SAVINGS.name(), "currency",
-				Currency.VND.name());
+				accountType.name(), "currency", currency.name());
 
 		EmailDto emailDto = new EmailDto();
 		emailDto.setToEmail(recipient);
@@ -89,7 +89,7 @@ public class NotificationHelper {
 		return emailDto;
 	}
 
-	public  static NotificationDto createPasswordUpdateNotification(String recipient) {
+	public static NotificationDto createPasswordUpdateNotification(String recipient) {
 		NotificationDto notificationDto = new NotificationDto();
 		notificationDto.setSubject(PASSWORD_UPDATE_SUBJECT);
 		notificationDto.setRecipient(recipient);
