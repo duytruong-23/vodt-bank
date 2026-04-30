@@ -43,3 +43,4 @@ private.pem
 ### Other ###
 *.ser
 uploads/
+keys/

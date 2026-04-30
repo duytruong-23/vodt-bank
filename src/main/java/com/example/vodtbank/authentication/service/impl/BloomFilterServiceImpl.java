@@ -8,10 +8,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.example.vodtbank.authentication.repository.UserRepository;
 import com.example.vodtbank.authentication.service.BloomFilterService;
-import com.example.vodtbank.config.BloomFilterConfig;
 import com.google.common.hash.BloomFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +25,9 @@ public class BloomFilterServiceImpl implements BloomFilterService {
 
 	private final BloomFilter<String> bloomFilter;
 	private final UserRepository userRepository;
+
+	@Value("${bloom-filter.file-path}")
+	private String bloomFilterFilePath;
 
 	public BloomFilterServiceImpl(BloomFilter<String> bloomFilter, UserRepository userRepository) {
 		this.bloomFilter = bloomFilter;
@@ -56,7 +59,7 @@ public class BloomFilterServiceImpl implements BloomFilterService {
 
 			executor.submit(() -> {
 				try(ObjectOutputStream oos = new ObjectOutputStream(
-						new FileOutputStream(BloomFilterConfig.FILE_PATH))) {
+						new FileOutputStream(bloomFilterFilePath))) {
 
 					oos.writeObject(bloomFilter);
 

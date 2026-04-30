@@ -9,12 +9,12 @@ import com.example.vodtbank.common.enums.AccountType;
 import com.example.vodtbank.common.enums.Currency;
 
 public class AccountDto extends BaseDto {
-    private String accountNumber;
-    private BigDecimal balance;
-    private AccountType accountType;
-    private AccountStatus status;
-    private Currency currency;
-    private LocalDateTime closedAt;
+	private String accountNumber;
+	private BigDecimal balance;
+	private AccountType accountType;
+	private AccountStatus status;
+	private Currency currency;
+	private LocalDateTime closedAt;
 
 	public String getAccountNumber() {
 		return accountNumber;

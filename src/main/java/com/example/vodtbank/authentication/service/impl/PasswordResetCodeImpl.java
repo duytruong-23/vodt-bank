@@ -9,6 +9,7 @@ import com.example.vodtbank.authentication.entity.User;
 import com.example.vodtbank.authentication.repository.PasswordResetCodeRepository;
 import com.example.vodtbank.authentication.repository.UserRepository;
 import com.example.vodtbank.authentication.service.PasswordResetCodeService;
+import com.example.vodtbank.common.ConstantUtils;
 import com.example.vodtbank.exception.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PasswordResetCodeImpl implements PasswordResetCodeService {
-	private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	private static final int CODE_LENGTH = 6;
 	private static final int EXPIRATION_MINUTES = 15;
 
@@ -36,7 +36,7 @@ public class PasswordResetCodeImpl implements PasswordResetCodeService {
 		String code;
 		do {
 			code = generateRandomCode();
-		} while(passwordResetCodeRepository.findByCode(code).isPresent());
+		} while(passwordResetCodeRepository.existsPasswordResetCodeByCode(code));
 
 		return code;
 	}
@@ -74,9 +74,9 @@ public class PasswordResetCodeImpl implements PasswordResetCodeService {
 		StringBuilder code = new StringBuilder();
 		SecureRandom random = new SecureRandom();
 
-		for (int i = 0; i < CODE_LENGTH; i++) {
-			int index = random.nextInt(CHARACTERS.length());
-			code.append(CHARACTERS.charAt(index));
+		for(int i = 0; i < CODE_LENGTH; i++) {
+			int index = random.nextInt(ConstantUtils.CHARSET.length());
+			code.append(ConstantUtils.CHARSET.charAt(index));
 		}
 
 		return code.toString();

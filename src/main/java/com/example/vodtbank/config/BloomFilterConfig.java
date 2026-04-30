@@ -10,18 +10,21 @@ import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class BloomFilterConfig {
-	public static final String FILE_PATH = "emails_bloom_filter.ser";
 	private final Log logger = LogFactory.getLog(getClass());
+
+	@Value("${bloom-filter.file-path}")
+	private String filePath;
 
 	@Bean
 	public BloomFilter<String> bloomFilter() {
-		if(Files.exists(Paths.get(FILE_PATH))) {
-			try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
+		if(Files.exists(Paths.get(filePath))) {
+			try(ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
 				if(ois.readObject() instanceof BloomFilter bloomFilter) {
 					return bloomFilter;
 				}

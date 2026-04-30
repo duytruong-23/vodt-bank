@@ -9,4 +9,6 @@ public interface PasswordResetCodeRepository extends JpaRepository<PasswordReset
 	Optional<PasswordResetCode> findByCode(String code);
 
 	void deleteByUserId(Long userId);
+
+	boolean existsPasswordResetCodeByCode(String code);
 }

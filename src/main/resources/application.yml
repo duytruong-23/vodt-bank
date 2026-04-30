@@ -35,8 +35,8 @@ server:
 
 ### Jwt Configuration ###
 jwt:
-  public-path: ${JWT_PUBLIC_KEY_LOCATION:classpath:jwt/public.pem}
-  private-path: ${JWT_PRIVATE_KEY_LOCATION:classpath:jwt/private.pem}
+  public-path: ${JWT_PUBLIC_KEY_LOCATION}
+  private-path: ${JWT_PRIVATE_KEY_LOCATION}
   expiration: ${JWT_EXPIRATION:3600000} # milliseconds
 
 ### Logging Configuration ###
@@ -58,3 +58,12 @@ admin:
 upload:
   profile-picture:
     directory: uploads/profile-pictures/
+
+### Account Encryption Configuration ###
+account:
+    encryption:
+        secret-key-path: ${ACCOUNT_SECRET_KEY_LOCATION}
+
+### Bloom Filter Configuration ###
+bloom-filter:
+  file-path: ${BLOOM_FILTER_FILE_LOCATION}

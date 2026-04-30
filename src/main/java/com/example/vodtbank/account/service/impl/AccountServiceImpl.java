@@ -5,7 +5,9 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.example.vodtbank.account.AccountEncrypter;
 import com.example.vodtbank.account.dto.AccountDto;
+import com.example.vodtbank.account.dto.AccountOverview;
 import com.example.vodtbank.account.entity.Account;
 import com.example.vodtbank.account.repository.AccountRepository;
 import com.example.vodtbank.account.service.AccountService;
@@ -32,15 +34,18 @@ public class AccountServiceImpl implements AccountService {
 	private final UserRepository userRepository;
 	private final UserService userService;
 	private final ModelMapper modelMapper;
+	private final AccountEncrypter accountEncrypter;
 
 	private final SecureRandom random = new SecureRandom();
 
-	public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository, UserService userService,
-			ModelMapper modelMapper) {
+	public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository,
+			UserService userService,
+			ModelMapper modelMapper, AccountEncrypter accountEncrypter) {
 		this.accountRepository = accountRepository;
 		this.userRepository = userRepository;
 		this.userService = userService;
 		this.modelMapper = modelMapper;
+		this.accountEncrypter = accountEncrypter;
 	}
 
 	@Override
@@ -60,12 +65,16 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public List<AccountDto> getAccounts() {
+	public List<AccountOverview> getCurrentUserAccounts() {
 		String currentUserEmail = userService.getCurrentUserEmail();
 		User user = userRepository.findByEmail(currentUserEmail)
 				.orElseThrow(() -> new NotFoundException("User not found with email: " + currentUserEmail));
 
-		return user.getAccounts().stream().map(account -> modelMapper.map(account, AccountDto.class)).toList();
+		return user.getAccounts().stream().map(account -> {
+			AccountOverview accountOverview = modelMapper.map(account, AccountOverview.class);
+			accountOverview.setAccountIdToken(accountEncrypter.encrypt(account.getId()));
+			return accountOverview;
+		}).toList();
 	}
 
 	@Override
@@ -77,7 +86,9 @@ public class AccountServiceImpl implements AccountService {
 				.orElseThrow(() -> new NotFoundException("Account not found with account number: " + accountNumber));
 
 		if(!user.getAccounts().contains(account)) {
-			throw new NotFoundException("Account with account number " + accountNumber + " does not belong to user with email " + currentUserEmail);
+			throw new NotFoundException(
+					"Account with account number " + accountNumber + " does not belong to user with email "
+							+ currentUserEmail);
 		}
 
 		if(account.getBalance().compareTo(BigDecimal.ZERO) > 0) {

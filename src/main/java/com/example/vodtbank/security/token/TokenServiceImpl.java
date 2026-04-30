@@ -2,6 +2,8 @@ package com.example.vodtbank.security.token;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -15,7 +17,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,10 @@ import org.springframework.stereotype.Service;
 public class TokenServiceImpl implements TokenService {
 
 	@Value("${jwt.public-path}")
-	private Resource publicKeyResource;
+	private String publicKeyPath;
 
 	@Value("${jwt.private-path}")
-	private Resource privateKeyResource;
+	private String privateKeyPath;
 
 	@Value("${jwt.expiration}")
 	private long expirationTime;
@@ -37,8 +38,8 @@ public class TokenServiceImpl implements TokenService {
 
 	@PostConstruct
 	public void init() throws IOException {
-		this.privateKey = getPrivateKey(privateKeyResource);
-		this.publicKey = getPublicKey(publicKeyResource);
+		this.privateKey = getPrivateKey(privateKeyPath);
+		this.publicKey = getPublicKey(publicKeyPath);
 	}
 
 	@Override
@@ -65,14 +66,20 @@ public class TokenServiceImpl implements TokenService {
 	@Override
 	public boolean isTokenExpired(String token) {
 		Date expiration = extractClaims(token, Claims::getExpiration);
-		if (expiration != null) {
+		if(expiration != null) {
 			return expiration.before(new Date());
 		}
 		return false;
 	}
 
-	private byte[] getDecodedKey(Resource resource) throws IOException {
-		String rawPem = resource.getContentAsString(StandardCharsets.UTF_8);
+	private byte[] getDecodedKey(String filePath) throws IOException {
+		Path path = Path.of(filePath);
+		if(!Files.exists(path)) {
+			throw new IOException("Key file not found: " + filePath);
+		}
+
+		String rawPem = Files.readString(path, StandardCharsets.UTF_8);
+
 		String pem = rawPem.replaceAll("-----BEGIN (.*)-----", "")
 				.replaceAll("-----END (.*)-----", "")
 				.replaceAll("\\s", "");
@@ -80,8 +87,8 @@ public class TokenServiceImpl implements TokenService {
 		return Base64.getDecoder().decode(pem);
 	}
 
-	PrivateKey getPrivateKey(Resource resource) throws IOException {
-		byte[] decodedKey = getDecodedKey(resource);
+	PrivateKey getPrivateKey(String filePath) throws IOException {
+		byte[] decodedKey = getDecodedKey(filePath);
 		PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
 
 		try {
@@ -91,8 +98,8 @@ public class TokenServiceImpl implements TokenService {
 		}
 	}
 
-	PublicKey getPublicKey(Resource resource) throws IOException {
-		byte[] decodedKey = getDecodedKey(resource);
+	PublicKey getPublicKey(String filePath) throws IOException {
+		byte[] decodedKey = getDecodedKey(filePath);
 		X509EncodedKeySpec keySpec = new X509EncodedKeySpec(decodedKey);
 
 		try {
