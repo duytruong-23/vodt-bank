@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.example.vodtbank.account.AccountEncrypter;
+import com.example.vodtbank.account.AccountResolver;
 import com.example.vodtbank.account.dto.AccountDto;
 import com.example.vodtbank.account.dto.AccountOverview;
 import com.example.vodtbank.account.entity.Account;
@@ -35,17 +36,19 @@ public class AccountServiceImpl implements AccountService {
 	private final UserService userService;
 	private final ModelMapper modelMapper;
 	private final AccountEncrypter accountEncrypter;
+	private final AccountResolver accountResolver;
 
 	private final SecureRandom random = new SecureRandom();
 
 	public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository,
 			UserService userService,
-			ModelMapper modelMapper, AccountEncrypter accountEncrypter) {
+			ModelMapper modelMapper, AccountEncrypter accountEncrypter, AccountResolver accountResolver) {
 		this.accountRepository = accountRepository;
 		this.userRepository = userRepository;
 		this.userService = userService;
 		this.modelMapper = modelMapper;
 		this.accountEncrypter = accountEncrypter;
+		this.accountResolver = accountResolver;
 	}
 
 	@Override
@@ -83,9 +86,7 @@ public class AccountServiceImpl implements AccountService {
 		User user = userRepository.findByEmail(currentUserEmail)
 				.orElseThrow(() -> new NotFoundException("User not found with email: " + currentUserEmail));
 
-		Long accountId = accountEncrypter.decrypt(accountIdToken);
-		Account account = accountRepository.findById(accountId)
-				.orElseThrow(() -> new NotFoundException("Account not found"));
+		Account account = accountResolver.getAccountFromIdToken(accountIdToken);
 
 		if(!user.getAccounts().contains(account)) {
 			throw new NotFoundException(

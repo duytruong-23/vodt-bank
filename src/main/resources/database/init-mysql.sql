@@ -37,14 +37,15 @@ CREATE TABLE users_roles
 );
 
 DROP TABLE IF EXISTS password_reset_codes;
-CREATE TABLE password_reset_codes(
-    id SERIAL PRIMARY KEY,
-    user_id BIGINT UNSIGNED NOT NULL,
-    code VARCHAR(255) NOT NULL UNIQUE,
-    expiration_date TIMESTAMP NOT NULL,
-    used BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+CREATE TABLE password_reset_codes
+(
+    id              SERIAL PRIMARY KEY,
+    user_id         BIGINT UNSIGNED NOT NULL,
+    code            VARCHAR(255)    NOT NULL UNIQUE,
+    expiration_date TIMESTAMP       NOT NULL,
+    used            BOOLEAN   DEFAULT FALSE,
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
@@ -67,35 +68,40 @@ CREATE TABLE accounts
 DROP TABLE IF EXISTS transactions;
 CREATE TABLE transactions
 (
-    id               SERIAL PRIMARY KEY,
-    transaction_id      VARCHAR(50)    NOT NULL UNIQUE,
-    account_id       BIGINT UNSIGNED NOT NULL,
-    amount              DECIMAL(19, 2) NOT NULL,
-    transaction_type VARCHAR(50)     NOT NULL,
-    transaction_status  VARCHAR(20)    NOT NULL DEFAULT 'PENDING',
-    description      TEXT,
-    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    source_account      VARCHAR(20),
-    destination_account VARCHAR(20),
-    created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (account_id) REFERENCES accounts (id) ON DELETE CASCADE
+    id                 SERIAL PRIMARY KEY,
+    transaction_id     VARCHAR(50)     NOT NULL UNIQUE,
+    from_account_id    BIGINT UNSIGNED NOT NULL,
+    to_account_id      BIGINT UNSIGNED NOT NULL,
+    idempotency_key    VARCHAR(255)    NOT NULL UNIQUE,
+    amount             DECIMAL(19, 2)  NOT NULL,
+    transaction_type   VARCHAR(50)     NOT NULL,
+    transaction_status VARCHAR(20)     NOT NULL DEFAULT 'PENDING',
+    description        TEXT,
+    transaction_date   TIMESTAMP                DEFAULT CURRENT_TIMESTAMP,
+    created_at         TIMESTAMP                DEFAULT CURRENT_TIMESTAMP,
+    updated_at         TIMESTAMP                DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (from_account_id) REFERENCES accounts (id) ON DELETE SET NULL,
+    FOREIGN KEY (to_account_id) REFERENCES accounts (id) ON DELETE SET NULL
 );
 
 DROP TABLE IF EXISTS notifications;
-CREATE TABLE notifications (
-    id SERIAL PRIMARY KEY,
-    user_id BIGINT UNSIGNED NOT NULL,
-    subject VARCHAR(255) NOT NULL,
-    recipient VARCHAR(255) NOT NULL,
-    body TEXT NOT NULL,
-    type VARCHAR(50) NOT NULL,
+CREATE TABLE notifications
+(
+    id         SERIAL PRIMARY KEY,
+    user_id    BIGINT UNSIGNED NOT NULL,
+    subject    VARCHAR(255)    NOT NULL,
+    recipient  VARCHAR(255)    NOT NULL,
+    body       TEXT            NOT NULL,
+    type       VARCHAR(50)     NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 ## Insert default roles
-INSERT INTO roles (name) VALUES ('CUSTOMER');
-INSERT INTO roles (name) VALUES ('ADMIN');
-INSERT INTO roles (name) VALUES ('AUDITOR');
+INSERT INTO roles (name)
+VALUES ('CUSTOMER');
+INSERT INTO roles (name)
+VALUES ('ADMIN');
+INSERT INTO roles (name)
+VALUES ('AUDITOR');

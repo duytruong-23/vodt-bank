@@ -1,15 +1,20 @@
 package com.example.vodtbank.transaction.dto;
 
-import com.example.vodtbank.common.enums.TransactionType;
-
 import java.math.BigDecimal;
 
+import com.example.vodtbank.common.enums.TransactionType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public record TransactionRequest(
+		@NotNull(message = "Transaction type is required")
         TransactionType transactionType,
         BigDecimal amount,
-        String accountNumber,
+        String fromAccountIdToken,
         String description,
         // The receiver account number for transfer transactions
-        String destinationAccountNumber
+        String toAccountIdToken,
+		@NotBlank(message = "Idempotency key is required")
+		String idempotencyKey
 ) {
 }
