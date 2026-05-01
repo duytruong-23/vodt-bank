@@ -78,22 +78,30 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public void closeAccount(String accountNumber) {
+	public void closeAccount(String accountIdToken) {
 		String currentUserEmail = userService.getCurrentUserEmail();
 		User user = userRepository.findByEmail(currentUserEmail)
 				.orElseThrow(() -> new NotFoundException("User not found with email: " + currentUserEmail));
-		Account account = accountRepository.findByAccountNumber(accountNumber)
-				.orElseThrow(() -> new NotFoundException("Account not found with account number: " + accountNumber));
+
+		Long accountId = accountEncrypter.decrypt(accountIdToken);
+		Account account = accountRepository.findById(accountId)
+				.orElseThrow(() -> new NotFoundException("Account not found"));
 
 		if(!user.getAccounts().contains(account)) {
 			throw new NotFoundException(
-					"Account with account number " + accountNumber + " does not belong to user with email "
+					"Account with" + account.getAccountNumber() + " does not belong to user with email: "
 							+ currentUserEmail);
 		}
 
 		if(account.getBalance().compareTo(BigDecimal.ZERO) > 0) {
 			throw new BadRequestException("Cannot close account with non-zero balance");
 		}
+
+		if(AccountStatus.CLOSED.equals(account.getStatus())) {
+			throw new BadRequestException("Account is already closed");
+		}
+
+		//TODO: Handle pending transactions before closing account
 
 		account.setStatus(AccountStatus.CLOSED);
 		account.setClosedAt(LocalDateTime.now());

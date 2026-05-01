@@ -39,7 +39,7 @@ public class Account extends BaseEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private AccountStatus status;
+    private AccountStatus status = AccountStatus.ACTIVE;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

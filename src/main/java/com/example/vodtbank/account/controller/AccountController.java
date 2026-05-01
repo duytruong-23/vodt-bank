@@ -7,6 +7,7 @@ import com.example.vodtbank.account.service.AccountService;
 import com.example.vodtbank.response.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,9 +27,9 @@ public class AccountController {
 		return ResponseEntity.ok(Response.success("Accounts retrieved successfully", accounts));
 	}
 
-	@PutMapping("/close")
-	public ResponseEntity<Response<Void>> closeAccount(String accountNumber) {
-		accountService.closeAccount(accountNumber);
+	@PutMapping("/close/{accountIdToken}")
+	public ResponseEntity<Response<Void>> closeAccount(@PathVariable String accountIdToken) {
+		accountService.closeAccount(accountIdToken);
 		return ResponseEntity.ok(Response.noContent("Account closed successfully"));
 	}
 }

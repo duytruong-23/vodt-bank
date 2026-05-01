@@ -11,5 +11,5 @@ public interface AccountService {
 
 	List<AccountOverview> getCurrentUserAccounts();
 
-	void closeAccount(String accountNumber);
+	void closeAccount(String accountIdToken);
 }
