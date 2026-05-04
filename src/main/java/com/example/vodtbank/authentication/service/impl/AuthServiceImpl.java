@@ -21,7 +21,6 @@ import com.example.vodtbank.authentication.service.PasswordResetCodeService;
 import com.example.vodtbank.common.enums.AccountType;
 import com.example.vodtbank.exception.BadRequestException;
 import com.example.vodtbank.exception.NotFoundException;
-import com.example.vodtbank.notification.dto.EmailDto;
 import com.example.vodtbank.notification.dto.NotificationDto;
 import com.example.vodtbank.notification.helper.NotificationHelper;
 import com.example.vodtbank.notification.service.UserActionService;
@@ -110,14 +109,14 @@ public class AuthServiceImpl implements AuthService {
 
 		AccountDto savedAccount = accountService.createAccount(AccountType.SAVINGS, savedUser.getEmail());
 
-		EmailDto emailDto = NotificationHelper.createWelcomeEmail(savedUser.getEmail(), savedUser.getFirstName());
-		NotificationDto notificationDto = NotificationHelper.createWelcomeNotification(savedUser.getEmail());
-		userActionService.sendAndCreateNotification(emailDto, notificationDto, savedUser.getId());
+		NotificationDto notificationDto = NotificationHelper.createWelcomeNotification(savedUser.getEmail(),
+				savedUser.getFirstName());
+		userActionService.sendAndCreateNotification(notificationDto, savedUser.getId());
 
-		EmailDto newAccountEmail = NotificationHelper.createNewAccountEmail(savedUser.getEmail(),
-				savedUser.getFirstName(), savedAccount.getAccountNumber(), savedAccount.getAccountType(), savedAccount.getCurrency());
-		NotificationDto newAccountNotification = NotificationHelper.createNewAccountNotification(savedUser.getEmail());
-		userActionService.sendAndCreateNotification(newAccountEmail, newAccountNotification, savedUser.getId());
+		NotificationDto newAccountNotification = NotificationHelper.createNewAccountNotification(savedUser.getEmail(),
+				savedUser.getFirstName(), savedAccount.getAccountNumber(), savedAccount.getAccountType(),
+				savedAccount.getCurrency());
+		userActionService.sendAndCreateNotification(newAccountNotification, savedUser.getId());
 
 		return modelMapper.map(savedUser, UserDto.class);
 	}
@@ -157,10 +156,10 @@ public class AuthServiceImpl implements AuthService {
 
 		PasswordResetCodeDto passwordResetCodeDto = passwordResetCodeService.replaceCodeForUser(user.getId());
 
-		EmailDto passwordResetEmail = NotificationHelper.createPasswordResetEmail(user.getEmail(), user.getFirstName(),
+		NotificationDto passwordResetNotification = NotificationHelper.createPasswordResetNotification(user.getEmail(),
+				user.getFirstName(),
 				passwordResetBaseUrl, passwordResetCodeDto.getCode());
-		NotificationDto passwordResetNotification = NotificationHelper.createPasswordResetNotification(user.getEmail());
-		userActionService.sendAndCreateNotification(passwordResetEmail, passwordResetNotification, user.getId());
+		userActionService.sendAndCreateNotification(passwordResetNotification, user.getId());
 	}
 
 	@Override
@@ -189,10 +188,8 @@ public class AuthServiceImpl implements AuthService {
 		// Invalidate the code after successful password reset
 		passwordResetCodeRepository.deleteById(passwordResetCode.getId());
 
-		EmailDto passwordUpdateEmail = NotificationHelper.createPasswordUpdateEmail(user.getEmail(),
-				user.getFirstName());
 		NotificationDto passwordUpdateNotification = NotificationHelper.createPasswordUpdateNotification(
-				user.getEmail());
-		userActionService.sendAndCreateNotification(passwordUpdateEmail, passwordUpdateNotification, user.getId());
+				user.getEmail(), user.getFirstName());
+		userActionService.sendAndCreateNotification(passwordUpdateNotification, user.getId());
 	}
 }

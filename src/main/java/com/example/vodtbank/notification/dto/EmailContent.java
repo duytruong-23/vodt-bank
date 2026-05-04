@@ -3,12 +3,21 @@ package com.example.vodtbank.notification.dto;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EmailDto {
+public class EmailContent {
 	private String toEmail;
 	private String subject;
 	private String body;
 	private String templateName;
 	private Map<String, Object> variables = new HashMap<>();
+
+	public static EmailContent of(String toEmail, String subject, String templateName, Map<String, Object> variables) {
+		EmailContent emailContent = new EmailContent();
+		emailContent.setToEmail(toEmail);
+		emailContent.setSubject(subject);
+		emailContent.setTemplateName(templateName);
+		emailContent.setVariables(variables);
+		return emailContent;
+	}
 
 	public String getToEmail() {
 		return toEmail;

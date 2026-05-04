@@ -2,6 +2,7 @@ package com.example.vodtbank.notification.dto;
 
 import com.example.vodtbank.common.dto.BaseDto;
 import com.example.vodtbank.common.enums.NotificationType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 
 public class NotificationDto extends BaseDto {
@@ -10,6 +11,8 @@ public class NotificationDto extends BaseDto {
 	private String recipient;
 	private String body;
 	private NotificationType type;
+	@JsonIgnore
+	private EmailContent emailContent;
 
 	public String getSubject() {
 		return subject;
@@ -41,5 +44,13 @@ public class NotificationDto extends BaseDto {
 
 	public void setType(NotificationType type) {
 		this.type = type;
+	}
+
+	public EmailContent getEmailContent() {
+		return emailContent;
+	}
+
+	public void setEmailContent(EmailContent emailContent) {
+		this.emailContent = emailContent;
 	}
 }

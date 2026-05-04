@@ -1,7 +1,7 @@
 package com.example.vodtbank.notification.service;
 
-import com.example.vodtbank.notification.dto.EmailDto;
+import com.example.vodtbank.notification.dto.EmailContent;
 
 public interface EmailService {
-	void sendEmail(EmailDto emailDto);
+	void sendEmail(EmailContent emailContent);
 }

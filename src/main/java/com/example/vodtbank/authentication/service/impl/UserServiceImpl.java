@@ -14,7 +14,6 @@ import com.example.vodtbank.authentication.repository.UserRepository;
 import com.example.vodtbank.authentication.service.UserService;
 import com.example.vodtbank.exception.BadRequestException;
 import com.example.vodtbank.exception.NotFoundException;
-import com.example.vodtbank.notification.dto.EmailDto;
 import com.example.vodtbank.notification.dto.NotificationDto;
 import com.example.vodtbank.notification.helper.NotificationHelper;
 import com.example.vodtbank.notification.service.UserActionService;
@@ -95,11 +94,9 @@ public class UserServiceImpl implements UserService {
 		user.setPassword(passwordEncoder.encode(request.newPassword()));
 		userRepository.save(user);
 
-		EmailDto passwordUpdateEmail = NotificationHelper.createPasswordUpdateEmail(user.getEmail(),
-				user.getFirstName());
 		NotificationDto passwordUpdateNotification = NotificationHelper.createPasswordUpdateNotification(
-				user.getEmail());
-		userActionService.sendAndCreateNotification(passwordUpdateEmail, passwordUpdateNotification, user.getId());
+				user.getEmail(), user.getFirstName());
+		userActionService.sendAndCreateNotification(passwordUpdateNotification, user.getId());
 	}
 
 	@Override

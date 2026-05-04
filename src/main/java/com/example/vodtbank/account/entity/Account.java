@@ -2,6 +2,7 @@ package com.example.vodtbank.account.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.vodtbank.authentication.entity.User;
@@ -52,9 +53,13 @@ public class Account extends BaseEntity {
     @JsonBackReference
     private User user;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "fromAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Transaction> transactions;
+    private List<Transaction> comingTransactions = new ArrayList<>();
+
+	@OneToMany(mappedBy = "toAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference
+	private List<Transaction> goingTransactions = new ArrayList<>();
 
 	public String getAccountNumber() {
 		return accountNumber;
@@ -112,11 +117,19 @@ public class Account extends BaseEntity {
 		this.user = user;
 	}
 
-	public List<Transaction> getTransactions() {
-		return transactions;
+	public List<Transaction> getComingTransactions() {
+		return comingTransactions;
 	}
 
-	public void setTransactions(List<Transaction> transactions) {
-		this.transactions = transactions;
+	public void setComingTransactions(List<Transaction> comingTransactions) {
+		this.comingTransactions = comingTransactions;
+	}
+
+	public List<Transaction> getGoingTransactions() {
+		return goingTransactions;
+	}
+
+	public void setGoingTransactions(List<Transaction> goingTransactions) {
+		this.goingTransactions = goingTransactions;
 	}
 }

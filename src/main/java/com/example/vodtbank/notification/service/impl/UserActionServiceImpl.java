@@ -1,6 +1,5 @@
 package com.example.vodtbank.notification.service.impl;
 
-import com.example.vodtbank.notification.dto.EmailDto;
 import com.example.vodtbank.notification.dto.NotificationDto;
 import com.example.vodtbank.notification.service.NotificationService;
 import com.example.vodtbank.notification.service.UserActionService;
@@ -24,11 +23,11 @@ public class UserActionServiceImpl implements UserActionService {
 
 	@Override
 	@Transactional
-	public void sendAndCreateNotification(EmailDto emailDto, NotificationDto notificationDto, Long userId) {
+	public void sendAndCreateNotification(NotificationDto notificationDto, Long userId) {
 		try {
 			notificationService.createNotification(notificationDto, userId);
 
-			applicationEventPublisher.publishEvent(emailDto);
+			applicationEventPublisher.publishEvent(notificationDto.getEmailContent());
 		} catch(Exception e) {
 			log.error(e);
 		}

@@ -2,7 +2,7 @@ package com.example.vodtbank.notification.service.impl;
 
 import java.nio.charset.StandardCharsets;
 
-import com.example.vodtbank.notification.dto.EmailDto;
+import com.example.vodtbank.notification.dto.EmailContent;
 import com.example.vodtbank.notification.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -33,8 +33,8 @@ public class EmailServiceImpl implements EmailService {
 	@Override
 	@Async
 	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-	public void sendEmail(EmailDto emailDto) {
-		if(emailDto == null) {
+	public void sendEmail(EmailContent emailContent) {
+		if(emailContent == null) {
 			return;
 		}
 
@@ -42,16 +42,16 @@ public class EmailServiceImpl implements EmailService {
 		try {
 			MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
 					StandardCharsets.UTF_8.name());
-			helper.setTo(emailDto.getToEmail());
-			helper.setSubject(emailDto.getSubject());
+			helper.setTo(emailContent.getToEmail());
+			helper.setSubject(emailContent.getSubject());
 
-			if(StringUtils.hasText(emailDto.getTemplateName())) {
+			if(StringUtils.hasText(emailContent.getTemplateName())) {
 				Context context = new Context();
-				context.setVariables(emailDto.getVariables());
-				String htmlContent = templateEngine.process(emailDto.getTemplateName(), context);
+				context.setVariables(emailContent.getVariables());
+				String htmlContent = templateEngine.process(emailContent.getTemplateName(), context);
 				helper.setText(htmlContent, true);
 			} else {
-				helper.setText(emailDto.getBody(), true);
+				helper.setText(emailContent.getBody(), true);
 			}
 
 			javaMailSender.send(message);
