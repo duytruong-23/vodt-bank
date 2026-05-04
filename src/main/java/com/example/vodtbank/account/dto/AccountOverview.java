@@ -8,6 +8,7 @@ import com.example.vodtbank.common.enums.Currency;
 
 public class AccountOverview {
 	private String accountIdToken;
+	private String accountNumber;
 	private AccountType accountType;
 	private BigDecimal balance;
 	private Currency currency;
@@ -51,5 +52,13 @@ public class AccountOverview {
 
 	public void setStatus(AccountStatus status) {
 		this.status = status;
+	}
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
 	}
 }

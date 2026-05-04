@@ -1,5 +1,7 @@
 package com.example.vodtbank.notification.helper;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import com.example.vodtbank.common.enums.AccountType;
@@ -13,6 +15,8 @@ public class NotificationHelper {
 	private static final String ACCOUNT_CREATED_SUBJECT = "Your New Account at VodtBank is Created!";
 	private static final String PASSWORD_RESET_SUBJECT = "Password Reset Code";
 	private static final String PASSWORD_UPDATE_SUBJECT = "Your Password Has Been Updated";
+	private static final String CREDIT_TRANSACTION_SUBJECT = "Credit Alert: You've Received a Deposit";
+	private static final String DEBIT_TRANSACTION_SUBJECT = "Debit Alert: A Withdrawal Has Occurred";
 
 	private NotificationHelper() {
 		// Private constructor to prevent instantiation
@@ -77,5 +81,53 @@ public class NotificationHelper {
 
 		notificationDto.setEmailContent(emailContent);
 		return notificationDto;
+	}
+
+	public static NotificationDto createDepositTransactionNotification(String recipient, String name,
+			String accountNumber,
+			String amount, LocalDateTime date, BigDecimal balance) {
+		NotificationDto notificationDto = new NotificationDto();
+		notificationDto.setSubject(CREDIT_TRANSACTION_SUBJECT);
+		notificationDto.setRecipient(recipient);
+		notificationDto.setBody("Deposit Transaction!");
+		notificationDto.setType(NotificationType.EMAIL);
+
+		Map<String, Object> variables = createCommonTransactionEmailVariables(name, accountNumber, amount, date,
+				balance);
+
+		EmailContent emailContent = EmailContent.of(recipient, CREDIT_TRANSACTION_SUBJECT, "credit-alert", variables);
+
+		notificationDto.setEmailContent(emailContent);
+		return notificationDto;
+	}
+
+	public static NotificationDto createWithdrawalTransactionNotification(String recipient, String name,
+			String accountNumber,
+			String amount, LocalDateTime date, BigDecimal balance) {
+		NotificationDto notificationDto = new NotificationDto();
+		notificationDto.setSubject(DEBIT_TRANSACTION_SUBJECT);
+		notificationDto.setRecipient(recipient);
+		notificationDto.setBody("Withdrawal Transaction!");
+		notificationDto.setType(NotificationType.EMAIL);
+
+		Map<String, Object> variables = createCommonTransactionEmailVariables(name, accountNumber, amount, date,
+				balance);
+
+		EmailContent emailContent = EmailContent.of(recipient, DEBIT_TRANSACTION_SUBJECT, "debit-alert", variables);
+
+		notificationDto.setEmailContent(emailContent);
+		return notificationDto;
+	}
+
+	private static Map<String, Object> createCommonTransactionEmailVariables(String name, String accountNumber,
+			String amount,
+			LocalDateTime date, BigDecimal balance) {
+		return Map.of(
+				"name", name,
+				"accountNumber", accountNumber,
+				"amount", amount,
+				"date", date,
+				"balance", balance
+		);
 	}
 }
