@@ -85,7 +85,7 @@ public class NotificationHelper {
 
 	public static NotificationDto createDepositTransactionNotification(String recipient, String name,
 			String accountNumber,
-			String amount, LocalDateTime date, BigDecimal balance) {
+			BigDecimal amount, LocalDateTime date, BigDecimal balance) {
 		NotificationDto notificationDto = new NotificationDto();
 		notificationDto.setSubject(CREDIT_TRANSACTION_SUBJECT);
 		notificationDto.setRecipient(recipient);
@@ -103,7 +103,7 @@ public class NotificationHelper {
 
 	public static NotificationDto createWithdrawalTransactionNotification(String recipient, String name,
 			String accountNumber,
-			String amount, LocalDateTime date, BigDecimal balance) {
+			BigDecimal amount, LocalDateTime date, BigDecimal balance) {
 		NotificationDto notificationDto = new NotificationDto();
 		notificationDto.setSubject(DEBIT_TRANSACTION_SUBJECT);
 		notificationDto.setRecipient(recipient);
@@ -120,7 +120,7 @@ public class NotificationHelper {
 	}
 
 	private static Map<String, Object> createCommonTransactionEmailVariables(String name, String accountNumber,
-			String amount,
+			BigDecimal amount,
 			LocalDateTime date, BigDecimal balance) {
 		return Map.of(
 				"name", name,

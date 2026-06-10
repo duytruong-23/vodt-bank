@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Debit Alert</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #F0F4F8;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #1A2332;
+            padding: 32px 16px;
+        }
+
+        .wrapper {
+            max-width: 580px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background-color: #0B1F3A;
+            border-radius: 12px 12px 0 0;
+            padding: 28px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-brand {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #FFB347;
+        }
+
+        .header-badge {
+            background-color: #FF6B3D;
+            color: #FFFFFF;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        /* Hero amount block */
+        .hero {
+            background-color: #1F1005;
+            padding: 36px 36px 32px;
+            text-align: center;
+            border-bottom: 3px solid #FF6B3D;
+        }
+
+        .hero-label {
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #FFB347;
+            margin-bottom: 8px;
+        }
+
+        .hero-amount {
+            font-size: 48px;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+
+        .hero-amount .currency {
+            font-size: 24px;
+            font-weight: 400;
+            vertical-align: super;
+            color: #FF6B3D;
+            margin-right: 2px;
+        }
+
+        .hero-amount .minus {
+            color: #FF6B3D;
+            font-weight: 300;
+            margin-right: 2px;
+        }
+
+        .hero-date {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #FFB347;
+        }
+
+        /* Body */
+        .body {
+            background-color: #FFFFFF;
+            padding: 32px 36px;
+        }
+
+        .greeting {
+            font-size: 16px;
+            color: #1A2332;
+            margin-bottom: 16px;
+        }
+
+        .greeting strong {
+            font-weight: 700;
+        }
+
+        .description {
+            font-size: 14px;
+            color: #4A5568;
+            line-height: 1.65;
+            margin-bottom: 28px;
+        }
+
+        /* Warning notice */
+        .notice {
+            background-color: #FFF5F0;
+            border-left: 3px solid #FF6B3D;
+            border-radius: 0 6px 6px 0;
+            padding: 12px 16px;
+            margin-bottom: 28px;
+            font-size: 13px;
+            color: #7B3010;
+            line-height: 1.55;
+        }
+
+        .notice strong {
+            font-weight: 700;
+        }
+
+        /* Detail table */
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 28px;
+        }
+
+        .detail-table tr {
+            border-bottom: 1px solid #EDF2F7;
+        }
+
+        .detail-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .detail-table td {
+            padding: 12px 0;
+            font-size: 13px;
+        }
+
+        .detail-table .label {
+            color: #718096;
+            font-weight: 500;
+            width: 45%;
+        }
+
+        .detail-table .value {
+            color: #1A2332;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .detail-table .value.debit-amount {
+            color: #FF6B3D;
+        }
+
+        .detail-table .value.balance {
+            color: #1A2332;
+        }
+
+        /* Divider */
+        .divider {
+            border: none;
+            border-top: 1px solid #EDF2F7;
+            margin: 24px 0;
+        }
+
+        /* CTA */
+        .cta-block {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #0B1F3A;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 14px 32px;
+            border-radius: 6px;
+        }
+
+        .cta-secondary {
+            display: inline-block;
+            margin-top: 12px;
+            font-size: 12px;
+            color: #FF6B3D;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #F0F4F8;
+            border-radius: 0 0 12px 12px;
+            padding: 20px 36px;
+            text-align: center;
+        }
+
+        .footer p {
+            font-size: 11px;
+            color: #A0AEC0;
+            line-height: 1.6;
+        }
+
+        .footer a {
+            color: #FF6B3D;
+            text-decoration: none;
+        }
+
+        .account-chip {
+            display: inline-block;
+            background-color: #EDF2F7;
+            color: #4A5568;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <!-- Header -->
+    <div class="header">
+        <span class="header-brand">VODT Bank</span>
+        <span class="header-badge">Debit Alert</span>
+    </div>
+
+    <!-- Hero: debited amount -->
+    <div class="hero">
+        <p class="hero-label">Amount Debited</p>
+        <p class="hero-amount">
+            <span class="minus">−</span><span class="currency">$</span><span
+                th:text="${#numbers.formatDecimal(amount, 1, 'COMMA', 2, 'POINT')}">1,250.00</span>
+        </p>
+        <p class="hero-date"
+           th:text="${#temporals.format(date, 'EEEE, dd MMMM yyyy · HH:mm')}">
+            Monday, 10 June 2026 · 14:35
+        </p>
+    </div>
+
+    <!-- Body -->
+    <div class="body">
+
+        <p class="greeting">
+            Hello, <strong th:text="${name}">Truong Nguyen</strong>
+        </p>
+
+        <p class="description">
+            A debit transaction has been posted to your account. Please review the details below.
+        </p>
+
+        <!-- Warning notice -->
+        <div class="notice">
+            <strong>Not you?</strong> If you did not authorise this transaction, please
+            <a href="#" style="color: #FF6B3D;">report it immediately</a> to prevent further unauthorised activity.
+        </div>
+
+        <!-- Transaction detail rows -->
+        <table class="detail-table">
+            <tr>
+                <td class="label">Account Number</td>
+                <td class="value">
+                    <span class="account-chip" th:text="${accountNumber}">**** 4782</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Transaction Type</td>
+                <td class="value">Debit</td>
+            </tr>
+            <tr>
+                <td class="label">Amount</td>
+                <td class="value debit-amount"
+                    th:text="'−$' + ${#numbers.formatDecimal(amount, 1, 'COMMA', 2, 'POINT')}">
+                    −$1,250.00
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Date &amp; Time</td>
+                <td class="value"
+                    th:text="${#temporals.format(date, 'dd MMM yyyy, HH:mm')}">
+                    10 Jun 2026, 14:35
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Available Balance</td>
+                <td class="value balance"
+                    th:text="'$' + ${#numbers.formatDecimal(balance, 1, 'COMMA', 2, 'POINT')}">
+                    $8,430.00
+                </td>
+            </tr>
+        </table>
+
+        <hr class="divider" />
+
+        <div class="cta-block">
+            <a href="#" class="cta-button">View Transaction</a><br />
+            <a href="#" class="cta-secondary">Report Unauthorised Activity</a>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>
+            This is an automated notification for account
+            <span class="account-chip" th:text="${accountNumber}">**** 4782</span>
+            held by <span th:text="${name}">Truong Nguyen</span>.<br />
+            If you have questions, visit <a href="#">support.vodtbank.com</a> or call 1800-XXX-XXX.<br />
+            &copy; 2026 Your Bank. All rights reserved.
+        </p>
+    </div>
+
+</div>
+</body>
+</html>

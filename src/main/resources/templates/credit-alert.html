@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Credit Alert</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #F0F4F8;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #1A2332;
+            padding: 32px 16px;
+        }
+
+        .wrapper {
+            max-width: 580px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background-color: #0B1F3A;
+            border-radius: 12px 12px 0 0;
+            padding: 28px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-brand {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #7EB6FF;
+        }
+
+        .header-badge {
+            background-color: #1FD18C;
+            color: #0B1F3A;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        /* Hero amount block */
+        .hero {
+            background-color: #132C50;
+            padding: 36px 36px 32px;
+            text-align: center;
+            border-bottom: 3px solid #1FD18C;
+        }
+
+        .hero-label {
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #7EB6FF;
+            margin-bottom: 8px;
+        }
+
+        .hero-amount {
+            font-size: 48px;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+
+        .hero-amount .currency {
+            font-size: 24px;
+            font-weight: 400;
+            vertical-align: super;
+            color: #7EB6FF;
+            margin-right: 2px;
+        }
+
+        .hero-date {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #7EB6FF;
+        }
+
+        /* Body */
+        .body {
+            background-color: #FFFFFF;
+            padding: 32px 36px;
+        }
+
+        .greeting {
+            font-size: 16px;
+            color: #1A2332;
+            margin-bottom: 16px;
+        }
+
+        .greeting strong {
+            font-weight: 700;
+        }
+
+        .description {
+            font-size: 14px;
+            color: #4A5568;
+            line-height: 1.65;
+            margin-bottom: 28px;
+        }
+
+        /* Detail table */
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 28px;
+        }
+
+        .detail-table tr {
+            border-bottom: 1px solid #EDF2F7;
+        }
+
+        .detail-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .detail-table td {
+            padding: 12px 0;
+            font-size: 13px;
+        }
+
+        .detail-table .label {
+            color: #718096;
+            font-weight: 500;
+            width: 45%;
+        }
+
+        .detail-table .value {
+            color: #1A2332;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .detail-table .value.balance {
+            color: #1FD18C;
+        }
+
+        /* Divider */
+        .divider {
+            border: none;
+            border-top: 1px solid #EDF2F7;
+            margin: 24px 0;
+        }
+
+        /* CTA */
+        .cta-block {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #0B1F3A;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 14px 32px;
+            border-radius: 6px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #F0F4F8;
+            border-radius: 0 0 12px 12px;
+            padding: 20px 36px;
+            text-align: center;
+        }
+
+        .footer p {
+            font-size: 11px;
+            color: #A0AEC0;
+            line-height: 1.6;
+        }
+
+        .footer a {
+            color: #7EB6FF;
+            text-decoration: none;
+        }
+
+        .account-chip {
+            display: inline-block;
+            background-color: #EDF2F7;
+            color: #4A5568;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <!-- Header -->
+    <div class="header">
+        <span class="header-brand">VODT Bank</span>
+        <span class="header-badge">Credit Alert</span>
+    </div>
+
+    <!-- Hero: credited amount -->
+    <div class="hero">
+        <p class="hero-label">Amount Credited</p>
+        <p class="hero-amount">
+            <span class="currency">$</span>
+            <span th:text="${#numbers.formatDecimal(amount, 1, 'COMMA', 2, 'POINT')}">1,250.00</span>
+        </p>
+        <p class="hero-date" th:text="${#temporals.format(date, 'EEEE, dd MMMM yyyy · HH:mm')}">Monday, 10 June 2026 · 14:35</p>
+    </div>
+
+    <!-- Body -->
+    <div class="body">
+
+        <p class="greeting">
+            Hello, <strong th:text="${name}">Truong Nguyen</strong>
+        </p>
+
+        <p class="description">
+            A credit transaction has been posted to your account. Please review the details below.
+            If you did not authorise this transaction, contact our support team immediately.
+        </p>
+
+        <!-- Transaction detail rows -->
+        <table class="detail-table">
+            <tr>
+                <td class="label">Account Number</td>
+                <td class="value">
+                    <span class="account-chip" th:text="${accountNumber}">**** 4782</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Transaction Type</td>
+                <td class="value">Credit</td>
+            </tr>
+            <tr>
+                <td class="label">Amount</td>
+                <td class="value"
+                    th:text="'$' + ${#numbers.formatDecimal(amount, 1, 'COMMA', 2, 'POINT')}">
+                    $1,250.00
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Date &amp; Time</td>
+                <td class="value"
+                    th:text="${#temporals.format(date, 'dd MMM yyyy, HH:mm')}">
+                    10 Jun 2026, 14:35
+                </td>
+            </tr>
+            <tr>
+                <td class="label">Available Balance</td>
+                <td class="value balance"
+                    th:text="'$' + ${#numbers.formatDecimal(balance, 1, 'COMMA', 2, 'POINT')}">
+                    $8,430.00
+                </td>
+            </tr>
+        </table>
+
+        <hr class="divider" />
+
+        <div class="cta-block">
+            <a href="#" class="cta-button">View Transaction</a>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>
+            This is an automated notification for account
+            <span class="account-chip" th:text="${accountNumber}">**** 4782</span>
+            held by <span th:text="${name}">Truong Nguyen</span>.<br />
+            If you have questions, visit <a href="#">support.vodtbank.com</a> or call 1800-XXX-XXX.<br />
+            &copy; 2026 Your Bank. All rights reserved.
+        </p>
+    </div>
+
+</div>
+</body>
+</html>

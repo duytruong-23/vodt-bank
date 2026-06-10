@@ -12,7 +12,6 @@ public record TransactionRequest(
         BigDecimal amount,
         String fromAccountIdToken,
         String description,
-        // The receiver account number for transfer transactions
         String toAccountIdToken,
 		@NotBlank(message = "Idempotency key is required")
 		String idempotencyKey

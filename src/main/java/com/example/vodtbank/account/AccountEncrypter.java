@@ -37,7 +37,7 @@ public class AccountEncrypter {
 
 	@PostConstruct
 	public void init() {
-		this.secretKey = loadSecretKey();
+		secretKey = loadSecretKey();
 	}
 
 	public String encrypt(Long accountId) {
@@ -46,7 +46,7 @@ public class AccountEncrypter {
 			secureRandom.nextBytes(iv);
 
 			Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-			SecretKeySpec keySpec = new SecretKeySpec(this.secretKey, ALGO);
+			SecretKeySpec keySpec = new SecretKeySpec(secretKey, ALGO);
 			GCMParameterSpec gcmSpec = new GCMParameterSpec(TAG_LENGTH, iv);
 
 			cipher.init(Cipher.ENCRYPT_MODE, keySpec, gcmSpec);
