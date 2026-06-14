@@ -44,3 +44,6 @@ private.pem
 *.ser
 uploads/
 keys/
+
+### Docker MYSQL ###
+etc/docker/mysql/volume-data/mysql/
